@@ -1,4 +1,4 @@
-import { STATUS_CONFIG, type OutreachStatus } from './types'
+import type { OutreachStatus } from './types'
 
 export type FilterStatus = OutreachStatus | 'all'
 

@@ -4,11 +4,17 @@ import {
   JobDetails,
   ContactList,
   RecentSearches,
+  SearchLoading,
+  SearchError,
+  DomainSelector,
+  SearchEmptyState,
   type JobInfo,
   type Contact,
   type RecentSearch
 } from '../components/search'
 import { EmailDraftModal, type EmailDraft, type EmailContact } from '../components/email'
+import { useSearchJob } from '../hooks/useSearchJob'
+import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
 
 // Mock data for demonstration
 const mockRecentSearches: RecentSearch[] = [
@@ -28,34 +34,29 @@ const mockRecentSearches: RecentSearch[] = [
   }
 ]
 
-const mockContacts: Contact[] = [
-  {
-    id: '1',
-    name: 'Jane Smith',
-    title: 'Engineering Manager',
-    company: 'Stripe',
-    email: 'jane.smith@stripe.com',
-    emailConfidence: 94,
-    linkedinUrl: 'https://linkedin.com/in/janesmith'
-  },
-  {
-    id: '2',
-    name: 'Mike Chen',
-    title: 'Senior Technical Recruiter',
-    company: 'Stripe',
-    email: 'm.chen@stripe.com',
-    emailConfidence: 87,
-    linkedinUrl: 'https://linkedin.com/in/mikechen'
-  },
-  {
-    id: '3',
-    name: 'Sarah Johnson',
-    title: 'Staff Engineer',
-    company: 'Stripe',
-    email: 'sarah.j@stripe.com',
-    emailConfidence: 72
+// Helper to convert API types to frontend types
+function apiJobToJobInfo(job: ApiJob): JobInfo {
+  return {
+    company: job.company,
+    domain: job.companyDomain || '',
+    role: job.role,
+    department: job.department || '',
+    requirements: job.requirementsSummary || undefined,
+    jobUrl: job.url
   }
-]
+}
+
+function apiContactToContact(contact: ApiContact, company: string): Contact {
+  return {
+    id: contact.id,
+    name: contact.fullName || '',
+    title: contact.title || '',
+    company,
+    email: contact.email,
+    emailConfidence: contact.emailConfidence,
+    linkedinUrl: contact.linkedinUrl || undefined
+  }
+}
 
 // Mock email draft generator
 function generateMockDraft(contact: Contact, jobInfo: JobInfo): EmailDraft {
@@ -78,60 +79,99 @@ John`
   }
 }
 
-type SearchState = 'initial' | 'loading' | 'results'
+type SearchState =
+  | 'initial'
+  | 'loading'
+  | 'results'
+  | 'domain_selection'
+  | 'no_contacts'
+  | 'domain_not_found'
+  | 'error'
+
 
 export function Search() {
   const [searchState, setSearchState] = useState<SearchState>('initial')
   const [jobInfo, setJobInfo] = useState<JobInfo | null>(null)
   const [contacts, setContacts] = useState<Contact[]>([])
+  const [currentUrl, setCurrentUrl] = useState<string>('')
+  const [availableDomains, setAvailableDomains] = useState<string[]>([])
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   // Email modal state
   const [selectedContact, setSelectedContact] = useState<EmailContact | null>(null)
   const [emailDraft, setEmailDraft] = useState<EmailDraft | null>(null)
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
 
-  const handleUrlSubmit = (url: string) => {
-    setSearchState('loading')
+  const searchMutation = useSearchJob()
 
-    // Simulate API call
-    setTimeout(() => {
-      setJobInfo({
-        company: 'Stripe',
-        domain: 'stripe.com',
-        role: 'Backend Engineer',
-        department: 'Engineering',
-        requirements: 'Distributed systems, Go/Python, 5+ years experience',
-        jobUrl: url
-      })
-      setContacts(mockContacts)
-      setSearchState('results')
-    }, 1500)
+  const handleSearchResponse = (response: SearchJobResponse) => {
+    switch (response.status) {
+      case 'success':
+        setJobInfo(apiJobToJobInfo(response.job))
+        setContacts(response.contacts.map(c => apiContactToContact(c, response.job.company)))
+        setSearchState('results')
+        break
+
+      case 'domain_selection_required':
+        setJobInfo(apiJobToJobInfo(response.job))
+        setAvailableDomains(response.domains)
+        setSearchState('domain_selection')
+        break
+
+      case 'domain_not_found':
+        setJobInfo(apiJobToJobInfo(response.job))
+        setSearchState('domain_not_found')
+        break
+
+      case 'no_contacts_found':
+        setJobInfo(apiJobToJobInfo(response.job))
+        setContacts([])
+        setSearchState('no_contacts')
+        break
+
+      case 'parsing_failed':
+        setErrorMessage(response.error)
+        setSearchState('error')
+        break
+    }
   }
 
-  const handleRefetch = (updatedJob: JobInfo) => {
-    setJobInfo(updatedJob)
+  const handleUrlSubmit = (url: string) => {
+    setCurrentUrl(url)
+    setSearchState('loading')
+    setErrorMessage('')
+
+    searchMutation.mutate(
+      { url },
+      {
+        onSuccess: handleSearchResponse,
+        onError: (error) => {
+          setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred')
+          setSearchState('error')
+        }
+      }
+    )
+  }
+
+  const handleDomainSelect = (domain: string) => {
     setSearchState('loading')
 
-    // Simulate refetch
-    setTimeout(() => {
-      setSearchState('results')
-    }, 1000)
+    searchMutation.mutate(
+      { url: currentUrl, selectedDomain: domain },
+      {
+        onSuccess: handleSearchResponse,
+        onError: (error) => {
+          setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred')
+          setSearchState('error')
+        }
+      }
+    )
   }
 
   const handleRecentSearchSelect = (search: RecentSearch) => {
-    setSearchState('loading')
-
-    setTimeout(() => {
-      setJobInfo({
-        company: search.company,
-        domain: `${search.company.toLowerCase()}.com`,
-        role: search.role,
-        department: 'Engineering',
-        jobUrl: '#'
-      })
-      setContacts(mockContacts)
-      setSearchState('results')
-    }, 500)
+    // TODO: Implement recent search history with stored URLs
+    // For now, this is a placeholder - recent searches would need stored job URLs
+    console.log('Recent search selected:', search)
   }
 
   const handleGenerateEmail = (contact: Contact) => {
@@ -186,6 +226,9 @@ export function Search() {
     setSearchState('initial')
     setJobInfo(null)
     setContacts([])
+    setCurrentUrl('')
+    setAvailableDomains([])
+    setErrorMessage('')
   }
 
   if (searchState === 'initial') {
@@ -200,43 +243,80 @@ export function Search() {
     )
   }
 
+  // Loading state
+  if (searchState === 'loading') {
+    return <SearchLoading />
+  }
+
+  // Error state
+  if (searchState === 'error') {
+    return <SearchError message={errorMessage} onRetry={handleBackToSearch} />
+  }
+
+  // Domain selection state
+  if (searchState === 'domain_selection' && jobInfo) {
+    return (
+      <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+        <JobUrlInput onSubmit={handleUrlSubmit} />
+        <DomainSelector
+          company={jobInfo.company}
+          domains={availableDomains}
+          onSelect={handleDomainSelect}
+        />
+      </div>
+    )
+  }
+
+  // Domain not found state
+  if (searchState === 'domain_not_found' && jobInfo) {
+    return (
+      <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+        <JobUrlInput onSubmit={handleUrlSubmit} />
+        <JobDetails job={jobInfo} />
+        <SearchEmptyState
+          icon={<svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>}
+          iconBgColor="bg-yellow-100"
+          title="Domain Not Found"
+          message={<>We couldn't find a domain for <span className="font-medium">{jobInfo.company}</span>.</>}
+        />
+      </div>
+    )
+  }
+
+  // No contacts found state
+  if (searchState === 'no_contacts' && jobInfo) {
+    return (
+      <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+        <JobUrlInput onSubmit={handleUrlSubmit} />
+        <JobDetails job={jobInfo} />
+        <SearchEmptyState
+          icon={<svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>}
+          iconBgColor="bg-gray-100"
+          title="No Contacts Found"
+          message={<>We couldn't find any contacts at <span className="font-medium">{jobInfo.company}</span> for this role.</>}
+        />
+      </div>
+    )
+  }
+
+  // Results state
   return (
     <div className="flex flex-col gap-6">
-      {/* Back button on mobile */}
-      <button
-        onClick={handleBackToSearch}
-        className="flex items-center gap-1 text-gray-600 hover:text-gray-900 sm:hidden"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        New Search
-      </button>
+      <JobUrlInput onSubmit={handleUrlSubmit} />
 
       {jobInfo && (
-        <JobDetails
-          job={jobInfo}
-          onRefetch={handleRefetch}
-          isLoading={searchState === 'loading'}
-        />
+        <div>
+          <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">Result</p>
+          <JobDetails job={jobInfo} />
+        </div>
       )}
 
       <ContactList
         contacts={contacts}
         onGenerateEmail={handleGenerateEmail}
         onAddToTracker={handleAddToTracker}
-        isLoading={searchState === 'loading'}
+        isLoading={false}
       />
-
-      {/* Desktop: New search button */}
-      <div className="hidden sm:block">
-        <button
-          onClick={handleBackToSearch}
-          className="text-primary hover:underline"
-        >
-          Start a new search
-        </button>
-      </div>
 
       {/* Email Draft Modal */}
       {selectedContact && emailDraft && (
