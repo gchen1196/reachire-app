@@ -32,9 +32,7 @@ export function ContactCard({ contact, onGenerateEmail, onAddToTracker }: Contac
 
         <div className="flex-1 min-w-0">
           <h4 className="font-semibold text-gray-900 truncate">{contact.name}</h4>
-          <p className="text-sm text-gray-600 truncate">
-            {contact.title} @ {contact.company}
-          </p>
+          <p className="text-sm text-gray-600 truncate">{contact.title}</p>
 
           <div className="mt-3 space-y-1.5">
             <div className="flex items-center gap-2 text-sm">

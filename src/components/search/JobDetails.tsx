@@ -12,11 +12,24 @@ interface JobDetailsProps {
 }
 
 export function JobDetails({ job }: JobDetailsProps) {
+  const companyUrl = job.domain ? `https://${job.domain}` : null
+
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="font-semibold text-gray-900 truncate">{job.company}</h3>
+          {companyUrl ? (
+            <a
+              href={companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-gray-900 hover:text-primary truncate block"
+            >
+              {job.company}
+            </a>
+          ) : (
+            <h3 className="font-semibold text-gray-900 truncate">{job.company}</h3>
+          )}
           <p className="text-sm text-gray-600 truncate">{job.role}</p>
         </div>
 

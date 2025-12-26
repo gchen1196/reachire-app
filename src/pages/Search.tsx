@@ -3,36 +3,16 @@ import {
   JobUrlInput,
   JobDetails,
   ContactList,
-  RecentSearches,
   SearchLoading,
   SearchError,
   DomainSelector,
   SearchEmptyState,
   type JobInfo,
-  type Contact,
-  type RecentSearch
+  type Contact
 } from '../components/search'
 import { EmailDraftModal, type EmailDraft, type EmailContact } from '../components/email'
 import { useSearchJob } from '../hooks/useSearchJob'
 import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
-
-// Mock data for demonstration
-const mockRecentSearches: RecentSearch[] = [
-  {
-    id: '1',
-    company: 'Stripe',
-    role: 'Backend Engineer',
-    contactCount: 8,
-    searchedAt: new Date(Date.now() - 1000 * 60 * 60 * 24)
-  },
-  {
-    id: '2',
-    company: 'Airbnb',
-    role: 'Senior PM',
-    contactCount: 5,
-    searchedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2)
-  }
-]
 
 // Helper to convert API types to frontend types
 function apiJobToJobInfo(job: ApiJob): JobInfo {
@@ -168,12 +148,6 @@ export function Search() {
     )
   }
 
-  const handleRecentSearchSelect = (search: RecentSearch) => {
-    // TODO: Implement recent search history with stored URLs
-    // For now, this is a placeholder - recent searches would need stored job URLs
-    console.log('Recent search selected:', search)
-  }
-
   const handleGenerateEmail = (contact: Contact) => {
     if (!jobInfo) return
 
@@ -235,10 +209,6 @@ export function Search() {
     return (
       <div className="flex flex-col gap-8 max-w-2xl mx-auto">
         <JobUrlInput onSubmit={handleUrlSubmit} />
-        <RecentSearches
-          searches={mockRecentSearches}
-          onSelect={handleRecentSearchSelect}
-        />
       </div>
     )
   }
@@ -257,7 +227,7 @@ export function Search() {
   if (searchState === 'domain_selection' && jobInfo) {
     return (
       <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-        <JobUrlInput onSubmit={handleUrlSubmit} />
+        <JobUrlInput onSubmit={handleUrlSubmit} compact />
         <DomainSelector
           company={jobInfo.company}
           domains={availableDomains}
@@ -271,7 +241,7 @@ export function Search() {
   if (searchState === 'domain_not_found' && jobInfo) {
     return (
       <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-        <JobUrlInput onSubmit={handleUrlSubmit} />
+        <JobUrlInput onSubmit={handleUrlSubmit} compact />
         <JobDetails job={jobInfo} />
         <SearchEmptyState
           icon={<svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>}
@@ -287,7 +257,7 @@ export function Search() {
   if (searchState === 'no_contacts' && jobInfo) {
     return (
       <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-        <JobUrlInput onSubmit={handleUrlSubmit} />
+        <JobUrlInput onSubmit={handleUrlSubmit} compact />
         <JobDetails job={jobInfo} />
         <SearchEmptyState
           icon={<svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>}
@@ -302,7 +272,7 @@ export function Search() {
   // Results state
   return (
     <div className="flex flex-col gap-6">
-      <JobUrlInput onSubmit={handleUrlSubmit} />
+      <JobUrlInput onSubmit={handleUrlSubmit} compact />
 
       {jobInfo && (
         <div>
