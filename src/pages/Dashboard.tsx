@@ -21,6 +21,7 @@ function apiToTrackerEntry(job: TrackerJob): TrackerEntry {
   return {
     id: job.id,
     company: job.company.name || job.company.domain,
+    companyUrl: `https://${job.company.domain}`,
     role: job.title || 'Unknown Role',
     jobUrl: job.url,
     contacts: job.contacts.map((contact) => ({

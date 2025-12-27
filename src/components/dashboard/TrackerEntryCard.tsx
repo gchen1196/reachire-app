@@ -39,6 +39,15 @@ export function TrackerEntryCard({ entry, onContactStatusChange, onDelete, onCon
       onClick: () => window.open(entry.jobUrl, '_blank'),
     },
     {
+      label: 'View Company Website',
+      icon: (
+        <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+        </svg>
+      ),
+      onClick: () => window.open(entry.companyUrl, '_blank'),
+    },
+    {
       label: 'Delete',
       icon: (
         <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,20 +64,36 @@ export function TrackerEntryCard({ entry, onContactStatusChange, onDelete, onCon
       {/* Header - always visible */}
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-start gap-3 min-w-0 flex-1 text-left"
-          >
-            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="flex items-start gap-3 min-w-0 flex-1">
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0"
+            >
               <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
-            </div>
+            </button>
             <div className="min-w-0">
-              <h3 className="font-semibold text-gray-900 truncate">{entry.company}</h3>
-              <p className="text-sm text-gray-600 truncate">{entry.role}</p>
+              <a
+                href={entry.companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-gray-900 truncate block hover:text-primary hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {entry.company}
+              </a>
+              <a
+                href={entry.jobUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-gray-600 truncate block hover:text-primary hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {entry.role}
+              </a>
             </div>
-          </button>
+          </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="flex flex-col items-end gap-1">

@@ -18,12 +18,6 @@ interface ContactCardProps {
 }
 
 export function ContactCard({ contact, onGenerateEmail, onAddToTracker }: ContactCardProps) {
-  const confidenceColor = contact.emailConfidence >= 90
-    ? 'text-green-600'
-    : contact.emailConfidence >= 70
-      ? 'text-yellow-600'
-      : 'text-red-600'
-
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="flex items-start gap-3">
@@ -43,9 +37,6 @@ export function ContactCard({ contact, onGenerateEmail, onAddToTracker }: Contac
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               <span className="text-gray-700 truncate">{contact.email}</span>
-              <span className={`text-xs font-medium ${confidenceColor}`}>
-                {contact.emailConfidence}%
-              </span>
             </div>
 
             {contact.linkedinUrl && (
@@ -68,28 +59,37 @@ export function ContactCard({ contact, onGenerateEmail, onAddToTracker }: Contac
       <div className="flex gap-2 mt-4">
         <button
           onClick={() => onGenerateEmail(contact)}
-          className="flex-1 py-2.5 px-3 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors"
+          className="flex-1 py-2.5 px-3 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-1.5"
         >
-          Generate Email
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Email
         </button>
         <button
           onClick={() => onAddToTracker(contact)}
           disabled={!!contact.outreachStatus}
-          className={`flex-1 py-2.5 px-3 text-sm font-medium rounded-md transition-colors ${
+          className={`flex-1 py-2.5 px-3 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-1.5 ${
             contact.outreachStatus
               ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          {contact.outreachStatus === 'emailed'
-            ? 'Emailed'
-            : contact.outreachStatus === 'replied'
-              ? 'Replied'
-              : contact.outreachStatus === 'interviewing'
-                ? 'Interviewing'
-                : contact.outreachStatus === 'to_contact'
-                  ? 'In Tracker'
-                  : 'Add to Tracker'}
+          {contact.outreachStatus ? (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Saved
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Save
+            </>
+          )}
         </button>
       </div>
     </div>
