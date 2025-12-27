@@ -17,7 +17,7 @@ export function Layout({ children }: LayoutProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -51,33 +51,44 @@ export function Layout({ children }: LayoutProps) {
           <div className="flex items-center justify-between h-14 sm:h-16">
             <Link to="/" className="text-xl font-bold text-primary">Reachire</Link>
 
-            {/* Navigation dropdown */}
-            <div className="relative">
-              <button
-                ref={buttonRef}
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-              >
-                {currentPage ? (
-                  <>
-                    <currentPage.icon className="w-5 h-5" />
-                    <span className="hidden sm:inline">{currentPage.label}</span>
-                  </>
-                ) : (
-                  <span>Menu</span>
-                )}
-                <svg
-                  className={`w-4 h-4 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            {/* Home page: Show Sign In button */}
+            {location.pathname === '/' ? (
+              !user && (
+                <Link
+                  to="/signin"
+                  className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                  Sign In
+                </Link>
+              )
+            ) : (
+              /* Other pages: Navigation dropdown */
+              <div className="relative">
+                <button
+                  ref={buttonRef}
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  {currentPage ? (
+                    <>
+                      <currentPage.icon className="w-5 h-5" />
+                      <span className="hidden sm:inline">{currentPage.label}</span>
+                    </>
+                  ) : (
+                    <span>Menu</span>
+                  )}
+                  <svg
+                    className={`w-4 h-4 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-              {/* Dropdown menu */}
-              {isMenuOpen && (
+                {/* Dropdown menu */}
+                {isMenuOpen && (
                 <div ref={menuRef}>
                   {/* Mobile: Full-width dropdown below header */}
                   <div
@@ -105,15 +116,7 @@ export function Layout({ children }: LayoutProps) {
                         </Link>
                       )
                     })}
-                    {user ? (
-                      <button
-                        onClick={signOut}
-                        className="flex items-center gap-4 px-6 py-4 text-base text-gray-700 active:bg-gray-100 w-full"
-                      >
-                        <LogOutIcon className="w-6 h-6" />
-                        Sign Out
-                      </button>
-                    ) : (
+                    {!user && (
                       <Link
                         to="/signin"
                         className={`flex items-center gap-4 px-6 py-4 text-base transition-colors ${
@@ -154,15 +157,7 @@ export function Layout({ children }: LayoutProps) {
                         </Link>
                       )
                     })}
-                    {user ? (
-                      <button
-                        onClick={signOut}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 w-full"
-                      >
-                        <LogOutIcon className="w-5 h-5" />
-                        Sign Out
-                      </button>
-                    ) : (
+                    {!user && (
                       <Link
                         to="/signin"
                         className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
@@ -178,7 +173,8 @@ export function Layout({ children }: LayoutProps) {
                   </div>
                 </div>
               )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -219,14 +215,6 @@ function UserIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-    </svg>
-  )
-}
-
-function LogOutIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
     </svg>
   )
 }

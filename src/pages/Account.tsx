@@ -8,7 +8,7 @@ const MOCK_SUBSCRIPTION = {
 }
 
 export function Account() {
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
 
   const userName = user?.user_metadata?.full_name || user?.user_metadata?.name || 'User'
   const userEmail = user?.email || ''
@@ -127,6 +127,21 @@ export function Account() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </Link>
+      </div>
+
+      {/* Sign Out */}
+      <div className="pt-4">
+        <button
+          onClick={signOut}
+          className="w-full bg-white rounded-lg shadow p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
+        >
+          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </div>
+          <span className="font-medium text-gray-900">Sign Out</span>
+        </button>
       </div>
     </div>
   )

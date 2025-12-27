@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { RedirectIfAuthenticated } from './components/RedirectIfAuthenticated'
 import { ToastProvider } from './components/ui'
 import { Home } from './pages/Home'
 import { SignIn } from './pages/SignIn'
@@ -15,7 +16,14 @@ function App() {
       <ToastProvider />
       <Layout>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <RedirectIfAuthenticated>
+                <Home />
+              </RedirectIfAuthenticated>
+            }
+          />
           <Route path="/signin" element={<SignIn />} />
           <Route
             path="/search"
