@@ -1,21 +1,25 @@
+import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 export function SignIn() {
   const { signInWithGoogle } = useAuth()
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-sm">
         {/* Modal-like card */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+          {/* Logo */}
+          <Link to="/" className="flex items-center justify-center gap-2 mb-6">
+            <img src="/logo.svg" alt="Hiredoor" className="h-9" />
+            <img src="/logo_text.svg" alt="" className="h-5" />
+          </Link>
+
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Welcome back
+            <h1 className="text-xl font-bold text-gray-900">
+              Sign in or create your account
             </h1>
-            <p className="text-gray-500 text-sm">
-              Sign in to continue to ReachHire
-            </p>
           </div>
 
           {/* Google Sign In Button */}
