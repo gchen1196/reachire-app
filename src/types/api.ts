@@ -89,3 +89,20 @@ export type SearchJobResponse =
   | SearchJobDomainNotFoundResponse
   | SearchJobNoContactsFoundResponse
   | SearchJobParsingFailedResponse
+
+// Email generation types
+export interface GenerateEmailRequest {
+  jobTitle: string
+  companyName: string
+  companyDescription?: string
+  jobUrl: string
+  contactName: string
+  contactFirstName?: string
+  tone?: 'professional' | 'casual'
+  askForReferral?: boolean
+}
+
+export interface GenerateEmailResponse {
+  subject: string
+  body: string
+}

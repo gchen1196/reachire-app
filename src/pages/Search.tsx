@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import {
   JobUrlInput,
   JobDetails,
@@ -12,6 +13,7 @@ import {
 } from '../components/search'
 import { EmailDraftModal, type EmailDraft, type EmailContact } from '../components/email'
 import { useSearchJob } from '../hooks/useSearchJob'
+import { useGenerateEmail } from '../hooks/useGenerateEmail'
 import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
 
 // Helper to convert API types to frontend types
@@ -38,27 +40,6 @@ function apiContactToContact(contact: ApiContact, company: string): Contact {
   }
 }
 
-// Mock email draft generator
-function generateMockDraft(contact: Contact, jobInfo: JobInfo): EmailDraft {
-  const firstName = contact.name.split(' ')[0]
-  return {
-    to: contact.email,
-    subject: `${jobInfo.role} role – Quick intro`,
-    body: `Hi ${firstName},
-
-I just applied for the ${jobInfo.role} position at ${jobInfo.company} and wanted to reach out directly.
-
-I've spent 3 years at Datadog building real-time data pipelines in Go, processing millions of events per second. The distributed systems focus in the role is right in my wheelhouse.
-
-Would you be open to a quick chat?
-
-LinkedIn: linkedin.com/in/johndoe
-Resume: bit.ly/johndoe-resume
-
-John`
-  }
-}
-
 type SearchState =
   | 'initial'
   | 'loading'
@@ -75,7 +56,7 @@ export function Search() {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [currentUrl, setCurrentUrl] = useState<string>('')
   const [availableDomains, setAvailableDomains] = useState<string[]>([])
-  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [searchError, setSearchError] = useState<string>('')
 
   // Email modal state
   const [selectedContact, setSelectedContact] = useState<EmailContact | null>(null)
@@ -83,6 +64,7 @@ export function Search() {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
 
   const searchMutation = useSearchJob()
+  const emailMutation = useGenerateEmail()
 
   const handleSearchResponse = (response: SearchJobResponse) => {
     switch (response.status) {
@@ -110,7 +92,7 @@ export function Search() {
         break
 
       case 'parsing_failed':
-        setErrorMessage(response.error)
+        setSearchError(response.error)
         setSearchState('error')
         break
     }
@@ -119,15 +101,17 @@ export function Search() {
   const handleUrlSubmit = (url: string) => {
     setCurrentUrl(url)
     setSearchState('loading')
-    setErrorMessage('')
+    setSearchError('')
 
     searchMutation.mutate(
       { url },
       {
         onSuccess: handleSearchResponse,
         onError: (error) => {
-          setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred')
+          const message = error instanceof Error ? error.message : 'An unexpected error occurred'
+          setSearchError(message)
           setSearchState('error')
+          toast.error(message)
         }
       }
     )
@@ -141,8 +125,48 @@ export function Search() {
       {
         onSuccess: handleSearchResponse,
         onError: (error) => {
-          setErrorMessage(error instanceof Error ? error.message : 'An unexpected error occurred')
+          const message = error instanceof Error ? error.message : 'An unexpected error occurred'
+          setSearchError(message)
           setSearchState('error')
+          toast.error(message)
+        }
+      }
+    )
+  }
+
+  const handleCloseEmailModal = () => {
+    setIsEmailModalOpen(false)
+    setSelectedContact(null)
+    setEmailDraft(null)
+    emailMutation.reset()
+  }
+
+  const generateEmailDraft = (contact: EmailContact) => {
+    if (!jobInfo) return
+
+    setEmailDraft(null)
+
+    emailMutation.mutate(
+      {
+        jobTitle: jobInfo.role,
+        companyName: jobInfo.company,
+        companyDescription: jobInfo.requirements,
+        jobUrl: jobInfo.jobUrl,
+        contactName: contact.name,
+        contactFirstName: contact.name.split(' ')[0]
+      },
+      {
+        onSuccess: (data) => {
+          setEmailDraft({
+            to: contact.email,
+            subject: data.subject,
+            body: data.body
+          })
+          toast.success('Email draft generated')
+        },
+        onError: (error) => {
+          toast.error(error instanceof Error ? error.message : 'Failed to generate email')
+          handleCloseEmailModal()
         }
       }
     )
@@ -158,32 +182,14 @@ export function Search() {
       email: contact.email
     }
 
-    const draft = generateMockDraft(contact, jobInfo)
-
     setSelectedContact(emailContact)
-    setEmailDraft(draft)
     setIsEmailModalOpen(true)
-  }
-
-  const handleCloseEmailModal = () => {
-    setIsEmailModalOpen(false)
-    setSelectedContact(null)
-    setEmailDraft(null)
+    generateEmailDraft(emailContact)
   }
 
   const handleRegenerateDraft = () => {
-    if (!selectedContact || !jobInfo) return
-
-    // Simulate regeneration with slightly different content
-    const contact = contacts.find(c => c.email === selectedContact.email)
-    if (contact) {
-      const newDraft = generateMockDraft(contact, jobInfo)
-      newDraft.body = newDraft.body.replace(
-        "I've spent 3 years at Datadog",
-        "With my background at Datadog over 3 years"
-      )
-      setEmailDraft(newDraft)
-    }
+    if (!selectedContact) return
+    generateEmailDraft(selectedContact)
   }
 
   const handleOpenInGmail = (draft: EmailDraft) => {
@@ -202,7 +208,7 @@ export function Search() {
     setContacts([])
     setCurrentUrl('')
     setAvailableDomains([])
-    setErrorMessage('')
+    setSearchError('')
   }
 
   if (searchState === 'initial') {
@@ -220,7 +226,7 @@ export function Search() {
 
   // Error state
   if (searchState === 'error') {
-    return <SearchError message={errorMessage} onRetry={handleBackToSearch} />
+    return <SearchError message={searchError} onRetry={handleBackToSearch} />
   }
 
   // Domain selection state
@@ -289,11 +295,12 @@ export function Search() {
       />
 
       {/* Email Draft Modal */}
-      {selectedContact && emailDraft && (
+      {selectedContact && (
         <EmailDraftModal
           contact={selectedContact}
           draft={emailDraft}
           isOpen={isEmailModalOpen}
+          isLoading={emailMutation.isPending}
           onClose={handleCloseEmailModal}
           onRegenerate={handleRegenerateDraft}
           onOpenInGmail={handleOpenInGmail}

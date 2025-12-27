@@ -1,4 +1,5 @@
 import { ContactCard, type Contact } from './ContactCard'
+import { Spinner } from '../ui'
 
 interface ContactListProps {
   contacts: Contact[]
@@ -17,7 +18,7 @@ export function ContactList({
     return (
       <div className="bg-white rounded-lg shadow p-8">
         <div className="flex flex-col items-center justify-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mb-4" />
+          <Spinner size="lg" className="mb-4" />
           <p className="text-gray-600">Searching for contacts...</p>
         </div>
       </div>

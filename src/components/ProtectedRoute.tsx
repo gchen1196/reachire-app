@@ -1,0 +1,25 @@
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { Spinner } from './ui'
+
+interface ProtectedRouteProps {
+  children: React.ReactNode
+}
+
+export function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <Spinner />
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <Navigate to="/signin" replace />
+  }
+
+  return <>{children}</>
+}

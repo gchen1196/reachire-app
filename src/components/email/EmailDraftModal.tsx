@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Spinner } from '../ui'
 
 export interface EmailDraft {
   to: string
@@ -15,8 +16,9 @@ export interface EmailContact {
 
 interface EmailDraftModalProps {
   contact: EmailContact
-  draft: EmailDraft
+  draft: EmailDraft | null
   isOpen: boolean
+  isLoading: boolean
   onClose: () => void
   onRegenerate: () => void
   onOpenInGmail: (draft: EmailDraft) => void
@@ -26,24 +28,37 @@ export function EmailDraftModal({
   contact,
   draft,
   isOpen,
+  isLoading,
   onClose,
   onRegenerate,
   onOpenInGmail
 }: EmailDraftModalProps) {
   const [isEditing, setIsEditing] = useState(false)
-  const [editedDraft, setEditedDraft] = useState(draft)
+  const [editedDraft, setEditedDraft] = useState<EmailDraft | null>(draft)
+
+  // Reset edited draft when draft changes
+  useEffect(() => {
+    if (draft) {
+      setEditedDraft(draft)
+      setIsEditing(false)
+    }
+  }, [draft])
 
   if (!isOpen) return null
 
   const currentDraft = isEditing ? editedDraft : draft
 
   const handleOpenInGmail = () => {
-    onOpenInGmail(currentDraft)
+    if (currentDraft) {
+      onOpenInGmail(currentDraft)
+    }
   }
 
   const handleEdit = () => {
-    setEditedDraft(draft)
-    setIsEditing(true)
+    if (draft) {
+      setEditedDraft(draft)
+      setIsEditing(true)
+    }
   }
 
   const handleSaveEdit = () => {
@@ -82,7 +97,7 @@ export function EmailDraftModal({
 
             {/* Header action buttons */}
             <div className="flex items-center gap-1 flex-shrink-0">
-              {!isEditing && (
+              {!isEditing && !isLoading && draft && (
                 <button
                   onClick={handleEdit}
                   className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
@@ -107,67 +122,80 @@ export function EmailDraftModal({
 
           {/* Content */}
           <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
-            {/* To field */}
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">To</label>
-              <p className="text-gray-900">{contact.email}</p>
-            </div>
-
-            {/* Subject field */}
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Subject</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editedDraft.subject}
-                  onChange={(e) => setEditedDraft({ ...editedDraft, subject: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-              ) : (
-                <div className="px-3 py-2 bg-gray-50 rounded-md text-gray-900">
-                  {currentDraft.subject}
-                </div>
-              )}
-            </div>
-
-            {/* Message field */}
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Message</label>
-              {isEditing ? (
-                <textarea
-                  value={editedDraft.body}
-                  onChange={(e) => setEditedDraft({ ...editedDraft, body: e.target.value })}
-                  rows={10}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                />
-              ) : (
-                <div className="px-3 py-2 bg-gray-50 rounded-md text-gray-900 whitespace-pre-wrap text-sm leading-relaxed">
-                  {currentDraft.body}
-                </div>
-              )}
-            </div>
-
-            {/* Edit mode buttons */}
-            {isEditing && (
-              <div className="flex gap-2">
-                <button
-                  onClick={handleSaveEdit}
-                  className="flex-1 py-2 px-4 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors"
-                >
-                  Save Changes
-                </button>
-                <button
-                  onClick={handleCancelEdit}
-                  className="flex-1 py-2 px-4 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition-colors"
-                >
-                  Cancel
-                </button>
+            {/* Loading state */}
+            {isLoading && (
+              <div className="flex flex-col items-center justify-center py-12">
+                <Spinner className="mb-4" />
+                <p className="text-gray-600 text-sm">Generating personalized email...</p>
               </div>
+            )}
+
+            {/* Draft content */}
+            {!isLoading && currentDraft && (
+              <>
+                {/* To field */}
+                <div>
+                  <label className="block text-sm text-gray-500 mb-1">To</label>
+                  <p className="text-gray-900">{contact.email}</p>
+                </div>
+
+                {/* Subject field */}
+                <div>
+                  <label className="block text-sm text-gray-500 mb-1">Subject</label>
+                  {isEditing && editedDraft ? (
+                    <input
+                      type="text"
+                      value={editedDraft.subject}
+                      onChange={(e) => setEditedDraft({ ...editedDraft, subject: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  ) : (
+                    <div className="px-3 py-2 bg-gray-50 rounded-md text-gray-900">
+                      {currentDraft.subject}
+                    </div>
+                  )}
+                </div>
+
+                {/* Message field */}
+                <div>
+                  <label className="block text-sm text-gray-500 mb-1">Message</label>
+                  {isEditing && editedDraft ? (
+                    <textarea
+                      value={editedDraft.body}
+                      onChange={(e) => setEditedDraft({ ...editedDraft, body: e.target.value })}
+                      rows={10}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                    />
+                  ) : (
+                    <div className="px-3 py-2 bg-gray-50 rounded-md text-gray-900 whitespace-pre-wrap text-sm leading-relaxed">
+                      {currentDraft.body}
+                    </div>
+                  )}
+                </div>
+
+                {/* Edit mode buttons */}
+                {isEditing && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSaveEdit}
+                      className="flex-1 py-2 px-4 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors"
+                    >
+                      Save Changes
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="flex-1 py-2 px-4 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
           {/* Footer actions */}
-          {!isEditing && (
+          {!isEditing && !isLoading && draft && (
             <div className="p-4 border-t border-gray-200 space-y-3">
               <button
                 onClick={onRegenerate}
