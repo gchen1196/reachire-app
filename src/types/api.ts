@@ -83,12 +83,20 @@ export interface SearchJobParsingFailedResponse {
   error: string
 }
 
+export interface SearchJobUnsupportedSiteResponse {
+  status: 'unsupported_site'
+  job: null
+  error: string
+  siteName: string
+}
+
 export type SearchJobResponse =
   | SearchJobSuccessResponse
   | SearchJobDomainSelectionRequiredResponse
   | SearchJobDomainNotFoundResponse
   | SearchJobNoContactsFoundResponse
   | SearchJobParsingFailedResponse
+  | SearchJobUnsupportedSiteResponse
 
 // Email generation types
 export interface GenerateEmailRequest {

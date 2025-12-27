@@ -14,10 +14,11 @@ interface TrackerEntryCardProps {
   entry: TrackerEntry
   onContactStatusChange: (entryId: string, contactId: string, status: OutreachStatus) => void
   onDelete: (id: string) => void
+  onContactDelete: (entryId: string, contactId: string) => void
   onEmailContact: (entry: TrackerEntry, contact: ContactEntry) => void
 }
 
-export function TrackerEntryCard({ entry, onContactStatusChange, onDelete, onEmailContact }: TrackerEntryCardProps) {
+export function TrackerEntryCard({ entry, onContactStatusChange, onDelete, onContactDelete, onEmailContact }: TrackerEntryCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const bestStatus = getBestStatus(entry.contacts)
@@ -112,6 +113,7 @@ export function TrackerEntryCard({ entry, onContactStatusChange, onDelete, onEma
                 contact={contact}
                 onStatusChange={(status) => onContactStatusChange(entry.id, contact.id, status)}
                 onEmail={() => onEmailContact(entry, contact)}
+                onDelete={() => onContactDelete(entry.id, contact.id)}
               />
             ))}
           </div>

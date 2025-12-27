@@ -1,3 +1,5 @@
+import type { OutreachStatus } from '../../api'
+
 export interface Contact {
   id: string
   name: string
@@ -6,6 +8,7 @@ export interface Contact {
   email: string
   emailConfidence: number
   linkedinUrl?: string
+  outreachStatus?: OutreachStatus
 }
 
 interface ContactCardProps {
@@ -71,9 +74,22 @@ export function ContactCard({ contact, onGenerateEmail, onAddToTracker }: Contac
         </button>
         <button
           onClick={() => onAddToTracker(contact)}
-          className="flex-1 py-2.5 px-3 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 transition-colors"
+          disabled={!!contact.outreachStatus}
+          className={`flex-1 py-2.5 px-3 text-sm font-medium rounded-md transition-colors ${
+            contact.outreachStatus
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
         >
-          Add to Tracker
+          {contact.outreachStatus === 'emailed'
+            ? 'Emailed'
+            : contact.outreachStatus === 'replied'
+              ? 'Replied'
+              : contact.outreachStatus === 'interviewing'
+                ? 'Interviewing'
+                : contact.outreachStatus === 'to_contact'
+                  ? 'In Tracker'
+                  : 'Add to Tracker'}
         </button>
       </div>
     </div>

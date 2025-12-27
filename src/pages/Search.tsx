@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
 import {
   JobUrlInput,
   JobDetails,
@@ -14,6 +15,8 @@ import {
 import { EmailDraftModal, type EmailDraft, type EmailContact } from '../components/email'
 import { useSearchJob } from '../hooks/useSearchJob'
 import { useGenerateEmail } from '../hooks/useGenerateEmail'
+import { useSearchStore } from '../stores/searchStore'
+import { getOutreachStatuses, getPreviousOutreaches, createOutreach, type PreviousOutreach } from '../api'
 import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
 
 // Helper to convert API types to frontend types
@@ -40,39 +43,59 @@ function apiContactToContact(contact: ApiContact, company: string): Contact {
   }
 }
 
-type SearchState =
-  | 'initial'
-  | 'loading'
-  | 'results'
-  | 'domain_selection'
-  | 'no_contacts'
-  | 'domain_not_found'
-  | 'error'
-
-
 export function Search() {
-  const [searchState, setSearchState] = useState<SearchState>('initial')
-  const [jobInfo, setJobInfo] = useState<JobInfo | null>(null)
-  const [contacts, setContacts] = useState<Contact[]>([])
-  const [currentUrl, setCurrentUrl] = useState<string>('')
-  const [availableDomains, setAvailableDomains] = useState<string[]>([])
-  const [searchError, setSearchError] = useState<string>('')
+  // Persistent search state from store
+  const {
+    searchState,
+    setSearchState,
+    jobInfo,
+    setJobInfo,
+    contacts,
+    setContacts,
+    currentUrl,
+    setCurrentUrl,
+    availableDomains,
+    setAvailableDomains,
+    searchError,
+    setSearchError,
+    resetSearch
+  } = useSearchStore()
 
-  // Email modal state
+  // Email modal state (local - doesn't need to persist)
   const [selectedContact, setSelectedContact] = useState<EmailContact | null>(null)
   const [emailDraft, setEmailDraft] = useState<EmailDraft | null>(null)
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
+  const [previousOutreaches, setPreviousOutreaches] = useState<PreviousOutreach[]>([])
 
+  const queryClient = useQueryClient()
   const searchMutation = useSearchJob()
   const emailMutation = useGenerateEmail()
 
-  const handleSearchResponse = (response: SearchJobResponse) => {
+  const handleSearchResponse = async (response: SearchJobResponse) => {
     switch (response.status) {
-      case 'success':
-        setJobInfo(apiJobToJobInfo(response.job))
-        setContacts(response.contacts.map(c => apiContactToContact(c, response.job.company)))
+      case 'success': {
+        const jobInfoData = apiJobToJobInfo(response.job)
+        const contactsData = response.contacts.map(c => apiContactToContact(c, response.job.company))
+
+        setJobInfo(jobInfoData)
+        setContacts(contactsData)
         setSearchState('results')
+
+        // Fetch outreach statuses in background
+        try {
+          const emails = contactsData.map(c => c.email)
+          const { statuses } = await getOutreachStatuses(response.job.url, emails)
+
+          // Update contacts with their outreach status
+          setContacts(prev => prev.map(contact => ({
+            ...contact,
+            outreachStatus: statuses[contact.email]?.status
+          })))
+        } catch {
+          // Silently fail - statuses are optional enhancement
+        }
         break
+      }
 
       case 'domain_selection_required':
         setJobInfo(apiJobToJobInfo(response.job))
@@ -94,6 +117,11 @@ export function Search() {
       case 'parsing_failed':
         setSearchError(response.error)
         setSearchState('error')
+        break
+
+      case 'unsupported_site':
+        toast.error(response.error)
+        setSearchState('initial')
         break
     }
   }
@@ -138,6 +166,7 @@ export function Search() {
     setIsEmailModalOpen(false)
     setSelectedContact(null)
     setEmailDraft(null)
+    setPreviousOutreaches([])
     emailMutation.reset()
   }
 
@@ -172,7 +201,7 @@ export function Search() {
     )
   }
 
-  const handleGenerateEmail = (contact: Contact) => {
+  const handleGenerateEmail = async (contact: Contact) => {
     if (!jobInfo) return
 
     const emailContact: EmailContact = {
@@ -184,7 +213,16 @@ export function Search() {
 
     setSelectedContact(emailContact)
     setIsEmailModalOpen(true)
+    setPreviousOutreaches([])
     generateEmailDraft(emailContact)
+
+    // Fetch previous outreaches in background
+    try {
+      const { previousOutreaches: prev } = await getPreviousOutreaches(contact.email)
+      setPreviousOutreaches(prev)
+    } catch {
+      // Silently fail - previous outreaches are optional
+    }
   }
 
   const handleRegenerateDraft = () => {
@@ -192,23 +230,92 @@ export function Search() {
     generateEmailDraft(selectedContact)
   }
 
-  const handleOpenInGmail = (draft: EmailDraft) => {
+  const handleOpenInGmail = async (draft: EmailDraft) => {
+    if (!jobInfo || !selectedContact) return
+
+    // Find the full contact info to get linkedinUrl
+    const fullContact = contacts.find(c => c.email === draft.to)
+
+    // Open Gmail first for better UX
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(draft.to)}&su=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`
     window.open(gmailUrl, '_blank')
+
+    // Record the outreach in background
+    try {
+      await createOutreach({
+        jobUrl: jobInfo.jobUrl || currentUrl,
+        jobTitle: jobInfo.role,
+        companyDomain: jobInfo.domain,
+        companyName: jobInfo.company,
+        department: jobInfo.department || undefined,
+        contactEmail: draft.to,
+        contactName: selectedContact.name,
+        contactTitle: selectedContact.title || undefined,
+        contactLinkedinUrl: fullContact?.linkedinUrl,
+        status: 'emailed'
+      })
+
+      // Update local contact state to reflect emailed status
+      setContacts(prev => prev.map(contact =>
+        contact.email === draft.to
+          ? { ...contact, outreachStatus: 'emailed' as const }
+          : contact
+      ))
+
+      // Invalidate outreaches query so Dashboard refreshes
+      queryClient.invalidateQueries({ queryKey: ['outreaches'] })
+
+      toast.success('Contact saved to dashboard')
+    } catch (error) {
+      // Don't block the user - Gmail already opened
+      console.error('Failed to record outreach:', error)
+      toast.error('Failed to save contact')
+    }
+
+    handleCloseEmailModal()
   }
 
-  const handleAddToTracker = (contact: Contact) => {
-    // TODO: Implement add to tracker
-    console.log('Add to tracker:', contact)
+  const handleAddToTracker = async (contact: Contact) => {
+    if (!jobInfo) return
+
+    // Optimistic update - update UI immediately
+    setContacts(prev => prev.map(c =>
+      c.email === contact.email
+        ? { ...c, outreachStatus: 'to_contact' as const }
+        : c
+    ))
+
+    try {
+      await createOutreach({
+        jobUrl: jobInfo.jobUrl || currentUrl,
+        jobTitle: jobInfo.role,
+        companyDomain: jobInfo.domain,
+        companyName: jobInfo.company,
+        department: jobInfo.department || undefined,
+        contactEmail: contact.email,
+        contactName: contact.name,
+        contactTitle: contact.title || undefined,
+        contactLinkedinUrl: contact.linkedinUrl
+      })
+
+      // Invalidate outreaches query so Dashboard refreshes
+      queryClient.invalidateQueries({ queryKey: ['outreaches'] })
+
+      toast.success('Contact saved to dashboard')
+    } catch (error) {
+      // Rollback on failure
+      setContacts(prev => prev.map(c =>
+        c.email === contact.email
+          ? { ...c, outreachStatus: undefined }
+          : c
+      ))
+      console.error('Failed to add to tracker:', error)
+      toast.error('Failed to save contact')
+    }
   }
 
   const handleBackToSearch = () => {
-    setSearchState('initial')
-    setJobInfo(null)
-    setContacts([])
-    setCurrentUrl('')
-    setAvailableDomains([])
-    setSearchError('')
+    resetSearch()
   }
 
   if (searchState === 'initial') {
@@ -301,6 +408,7 @@ export function Search() {
           draft={emailDraft}
           isOpen={isEmailModalOpen}
           isLoading={emailMutation.isPending}
+          previousOutreaches={previousOutreaches}
           onClose={handleCloseEmailModal}
           onRegenerate={handleRegenerateDraft}
           onOpenInGmail={handleOpenInGmail}

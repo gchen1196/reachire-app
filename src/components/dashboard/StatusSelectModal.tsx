@@ -66,7 +66,7 @@ export function StatusSelectModal({
                   }`}
                 >
                   <span className={`w-3 h-3 rounded-full ${config.bgColor} ${
-                    status === 'to_contact' || status === 'no_response' ? 'border border-gray-300' : ''
+                    status === 'to_contact' ? 'border border-gray-300' : ''
                   }`} />
                   <span className={`flex-1 ${isSelected ? 'font-medium text-primary' : 'text-gray-700'}`}>
                     {config.label}
