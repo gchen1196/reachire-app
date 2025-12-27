@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import { isMobile } from '../lib/device'
 import {
   JobUrlInput,
   JobDetails,
@@ -236,9 +237,14 @@ export function Search() {
     // Find the full contact info to get linkedinUrl
     const fullContact = contacts.find(c => c.email === draft.to)
 
-    // Open Gmail first for better UX
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(draft.to)}&su=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`
-    window.open(gmailUrl, '_blank')
+    // Use mailto on mobile (Gmail app handles it), Gmail web URL on desktop
+    if (isMobile()) {
+      const mailtoUrl = `mailto:${encodeURIComponent(draft.to)}?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`
+      window.location.href = mailtoUrl
+    } else {
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(draft.to)}&su=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`
+      window.open(gmailUrl, '_blank')
+    }
 
     // Record the outreach in background
     try {
