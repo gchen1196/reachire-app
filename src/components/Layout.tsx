@@ -9,6 +9,7 @@ interface LayoutProps {
 const NAV_ITEMS = [
   { path: '/search', label: 'Search', icon: SearchIcon },
   { path: '/dashboard', label: 'Dashboard', icon: DashboardIcon },
+  { path: '/account', label: 'Account', icon: AccountIcon },
 ]
 
 export function Layout({ children }: LayoutProps) {
@@ -77,10 +78,9 @@ export function Layout({ children }: LayoutProps) {
 
               {/* Dropdown menu */}
               {isMenuOpen && (
-                <>
+                <div ref={menuRef}>
                   {/* Mobile: Full-width dropdown below header */}
                   <div
-                    ref={menuRef}
                     className="sm:hidden fixed left-0 right-0 top-14 bg-white border-b border-gray-200 shadow-lg z-20"
                   >
                     {NAV_ITEMS.map((item) => {
@@ -176,7 +176,7 @@ export function Layout({ children }: LayoutProps) {
                       </Link>
                     )}
                   </div>
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -227,6 +227,14 @@ function LogOutIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+    </svg>
+  )
+}
+
+function AccountIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
     </svg>
   )
 }

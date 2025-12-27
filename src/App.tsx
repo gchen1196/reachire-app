@@ -6,6 +6,8 @@ import { Home } from './pages/Home'
 import { SignIn } from './pages/SignIn'
 import { Search } from './pages/Search'
 import { Dashboard } from './pages/Dashboard'
+import { Account } from './pages/Account'
+import { Subscription } from './pages/Subscription'
 
 function App() {
   return (
@@ -28,6 +30,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Account />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account/subscription"
+            element={
+              <ProtectedRoute>
+                <Subscription />
               </ProtectedRoute>
             }
           />
