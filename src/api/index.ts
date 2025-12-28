@@ -2,6 +2,15 @@ export { apiClient } from './client'
 export { generateEmail } from './email'
 export { searchJob } from './jobs'
 export {
+  getResume,
+  uploadResume,
+  uploadResumeText,
+  deleteResume,
+  type ParsedProfile,
+  type ResumeUploadResponse,
+  type ResumeResponse
+} from './resume'
+export {
   getOutreaches,
   getOutreachStatuses,
   getPreviousOutreaches,

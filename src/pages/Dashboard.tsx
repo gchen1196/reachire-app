@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { toast } from 'sonner'
-import { isMobile } from '../lib/device'
+import { isMobile, openMailto } from '../lib/device'
 import {
   TrackerEntryCard,
   StatusFilter,
@@ -243,8 +243,7 @@ export function Dashboard() {
 
     // Use mailto on mobile (Gmail app handles it), Gmail web URL on desktop
     if (isMobile()) {
-      const mailtoUrl = `mailto:${encodeURIComponent(draft.to)}?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`
-      window.location.href = mailtoUrl
+      openMailto(draft.to, draft.subject, draft.body)
     } else {
       const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(draft.to)}&su=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`
       window.open(gmailUrl, '_blank')

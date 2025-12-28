@@ -8,6 +8,7 @@ import { SignIn } from './pages/SignIn'
 import { Search } from './pages/Search'
 import { Dashboard } from './pages/Dashboard'
 import { Account } from './pages/Account'
+import { Resume } from './pages/Resume'
 import { Subscription } from './pages/Subscription'
 
 function App() {
@@ -46,6 +47,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Account />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account/resume"
+            element={
+              <ProtectedRoute>
+                <Resume />
               </ProtectedRoute>
             }
           />
