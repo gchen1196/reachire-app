@@ -1,4 +1,5 @@
 import { apiClient } from './client'
+import type { Plan } from '../types/plans'
 
 export interface UpsertUserDto {
   id: string
@@ -14,10 +15,11 @@ export interface UserResponse {
   resumeFilename: string | null
   profile: unknown | null
   createdAt: string
-  plan: string
+  plan: Plan
   tokensRemaining: number
   tokensResetAt: string | null
   bonusTokens: number
+  cancelAt: string | null
 }
 
 export async function upsertUser(dto: UpsertUserDto): Promise<UserResponse> {

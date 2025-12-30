@@ -1,0 +1,160 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useUser } from '../hooks/useUser'
+import { useReturnPath } from '../hooks/useReturnPath'
+import { PlanSelector } from '../components/billing'
+import { createCheckoutSession, createPortalSession } from '../api'
+import type { SubscribablePlan } from '../types/plans'
+
+export function Pricing() {
+  const navigate = useNavigate()
+  const returnPath = useReturnPath('pricing', '/')
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const { isLoading, plan, isSubscribed, isCancelling } = useUser()
+
+  const handleSelectPlan = async (planId: SubscribablePlan) => {
+    setIsProcessing(true)
+    setError(null)
+    try {
+      const { checkoutUrl } = await createCheckoutSession({ planId })
+      window.location.href = checkoutUrl
+    } catch (err) {
+      console.error('Failed to create checkout session:', err)
+      setError('Failed to start checkout. Please try again.')
+      setIsProcessing(false)
+    }
+  }
+
+  const handleManageSubscription = async () => {
+    setIsProcessing(true)
+    setError(null)
+    try {
+      const { portalUrl } = await createPortalSession('/pricing')
+      window.location.href = portalUrl
+    } catch (err) {
+      console.error('Failed to open customer portal:', err)
+      setError('Failed to open subscription management. Please try again.')
+      setIsProcessing(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="flex justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Header */}
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-gray-900">
+          {isSubscribed ? 'Manage Your Plan' : 'Choose Your Plan'}
+        </h1>
+        {!isSubscribed && (
+          <p className="text-gray-600 mt-2">
+            Subscribe to start getting more interviews
+          </p>
+        )}
+      </div>
+
+      {/* Error message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
+
+      {/* Cancellation pending notice */}
+      {isCancelling && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <p className="text-sm text-amber-700">
+            Your subscription is set to cancel at the end of the billing period.
+            You can reactivate anytime before then.
+          </p>
+        </div>
+      )}
+
+      {/* Plan cards */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <PlanSelector
+          onSelectPlan={handleSelectPlan}
+          isProcessing={isProcessing}
+          currentPlan={isSubscribed ? plan : undefined}
+        />
+      </div>
+
+      {/* Cancel/Manage subscription button for subscribers */}
+      {isSubscribed && (
+        <button
+          onClick={handleManageSubscription}
+          disabled={isProcessing}
+          className="text-sm text-gray-500 hover:text-gray-700 text-center disabled:opacity-50"
+        >
+          {isProcessing ? 'Loading...' : 'Cancel or manage billing'}
+        </button>
+      )}
+
+      {/* What's included */}
+      <div className="bg-white rounded-lg shadow">
+        <div className="p-4 border-b border-gray-100">
+          <h2 className="font-semibold text-gray-900">What's included in each credit?</h2>
+        </div>
+        <div className="p-4">
+          <ul className="space-y-3 text-sm text-gray-600">
+            <li className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>1 job search with up to 12 verified contact emails</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>AI-personalized outreach emails for each contact</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>One-click email sending directly from the app</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Track and manage all your job applications</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Only charged when contacts are found</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Additional credits available to purchase anytime</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Back link */}
+      <button
+        onClick={() => navigate(returnPath)}
+        className="text-sm text-gray-500 hover:text-gray-700 text-center"
+      >
+        Go back
+      </button>
+    </div>
+  )
+}

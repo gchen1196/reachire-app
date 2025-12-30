@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+const UNSUPPORTED_SITES = ['LinkedIn', 'Wellfound', 'ZipRecruiter', 'Lever', 'Google']
+
 interface JobUrlInputProps {
   onSubmit: (url: string) => void
   isLoading?: boolean
@@ -8,6 +10,7 @@ interface JobUrlInputProps {
 
 export function JobUrlInput({ onSubmit, isLoading = false, compact = false }: JobUrlInputProps) {
   const [url, setUrl] = useState('')
+  const [showTooltip, setShowTooltip] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,29 +45,45 @@ export function JobUrlInput({ onSubmit, isLoading = false, compact = false }: Jo
 
   return (
     <div className="w-full">
-      <div className="text-center mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-          Find the right person to contact
-        </h2>
-        <p className="text-gray-600 text-sm sm:text-base">
-          Paste a job listing URL to find decision-makers
-        </p>
+      <div className="flex items-center gap-2 mb-4">
+        <h1 className="text-2xl font-bold text-gray-900">New Search</h1>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowTooltip(!showTooltip)}
+            onBlur={() => setShowTooltip(false)}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+          {showTooltip && (
+            <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 p-3 z-10">
+              <p className="text-sm font-medium text-gray-900 mb-2">Unsupported sites</p>
+              <ul className="text-sm text-gray-600 space-y-1">
+                {UNSUPPORTED_SITES.map((site) => (
+                  <li key={site}>• {site}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-
       <form onSubmit={handleSubmit} className="w-full">
         <div className="flex flex-col gap-3">
           <input
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="Paste a job listing URL..."
+            placeholder="Paste a job posting link..."
             className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={!url.trim() || isLoading}
-            className="w-full sm:w-auto sm:px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? 'Searching...' : 'Find Contacts'}
           </button>
@@ -72,7 +91,7 @@ export function JobUrlInput({ onSubmit, isLoading = false, compact = false }: Jo
       </form>
 
       <p className="text-center text-xs text-gray-500 mt-4">
-        Supports LinkedIn, Greenhouse, Lever, Indeed, Workday, and most career pages
+        1 credit per search · Only charged when contacts are found
       </p>
     </div>
   )

@@ -10,6 +10,8 @@ import { Dashboard } from './pages/Dashboard'
 import { Account } from './pages/Account'
 import { Resume } from './pages/Resume'
 import { Subscription } from './pages/Subscription'
+import { Credits } from './pages/Credits'
+import { Pricing } from './pages/Pricing'
 
 function App() {
   return (
@@ -63,6 +65,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Subscription />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account/credits"
+            element={
+              <ProtectedRoute>
+                <Credits />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pricing"
+            element={
+              <ProtectedRoute>
+                <Pricing />
               </ProtectedRoute>
             }
           />
