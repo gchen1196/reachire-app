@@ -1,18 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../hooks/useUser'
-
-// Mock usage data
-const MOCK_USAGE_HISTORY = [
-  { id: '1', date: '2024-12-28', description: 'Search: Software Engineer at Stripe', credits: 1 },
-  { id: '2', date: '2024-12-27', description: 'Search: Product Manager at Figma', credits: 1 },
-  { id: '3', date: '2024-12-26', description: 'Search: Frontend Developer at Vercel', credits: 1 },
-  { id: '4', date: '2024-12-25', description: 'Search: Data Scientist at OpenAI', credits: 1 },
-  { id: '5', date: '2024-12-24', description: 'Search: Backend Engineer at Notion', credits: 1 },
-]
+import { useTokenUsage } from '../hooks/useTokenUsage'
 
 export function Credits() {
   const navigate = useNavigate()
   const { totalTokens, isFree, isSubscribed, isLoading } = useUser()
+  const { data: tokenUsageData, isLoading: isUsageLoading } = useTokenUsage()
+
+  const usageHistory = tokenUsageData?.usage ?? []
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -107,7 +102,11 @@ export function Credits() {
           <h2 className="font-semibold text-gray-900">Usage History</h2>
         </div>
         <div className="divide-y divide-gray-100">
-          {MOCK_USAGE_HISTORY.length === 0 ? (
+          {isUsageLoading ? (
+            <div className="p-8 flex justify-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+            </div>
+          ) : usageHistory.length === 0 ? (
             <div className="p-8 text-center">
               <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -116,13 +115,16 @@ export function Credits() {
               <p className="text-sm text-gray-400 mt-1">Your credit usage will appear here</p>
             </div>
           ) : (
-            MOCK_USAGE_HISTORY.map((item) => (
+            usageHistory.map((item) => (
               <div key={item.id} className="p-4 flex items-center justify-between">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{item.description}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{formatDate(item.date)}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {item.action === 'job_search' ? 'Job Search' : item.action}
+                    {item.jobUrl && `: ${new URL(item.jobUrl).hostname}`}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">{formatDate(item.createdAt)}</p>
                 </div>
-                <span className="text-sm font-medium text-gray-600 ml-4">-{item.credits}</span>
+                <span className="text-sm font-medium text-gray-600 ml-4">-1</span>
               </div>
             ))
           )}
