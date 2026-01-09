@@ -129,7 +129,6 @@ export function EmailDraftModal({
                   <Spinner size="lg" />
                 </div>
                 <p className="text-gray-800 text-base">Generating personalized email...</p>
-                <p className="text-gray-400 text-sm mt-1">This may take a moment</p>
               </div>
             )}
 
