@@ -30,6 +30,7 @@ export function Privacy() {
           <li><a href="#how-we-use" className="hover:underline">How We Use Your Information</a></li>
           <li><a href="#information-sharing" className="hover:underline">Information Sharing and Disclosure</a></li>
           <li><a href="#third-party-services" className="hover:underline">Third-Party Services</a></li>
+          <li><a href="#google-user-data" className="hover:underline">Google User Data</a></li>
           <li><a href="#data-retention" className="hover:underline">Data Retention</a></li>
           <li><a href="#data-security" className="hover:underline">Data Security</a></li>
           <li><a href="#your-rights" className="hover:underline">Your Rights and Choices</a></li>
@@ -124,9 +125,63 @@ export function Privacy() {
         </p>
       </section>
 
-      {/* Section 5: Data Retention */}
+      {/* Section 5: Google User Data */}
+      <section id="google-user-data" className="mb-10">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Google User Data</h2>
+        <p className="text-gray-700 mb-4">
+          Hiredoor uses Google OAuth for authentication. This section specifically describes how we handle data received from Google APIs in compliance with Google's API Services User Data Policy.
+        </p>
+
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">5.1 Data We Access</h3>
+        <p className="text-gray-700 mb-4">When you sign in with Google, we request access to the following information:</p>
+        <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+          <li><strong>Email address:</strong> Used as your unique account identifier and for service-related communications</li>
+          <li><strong>Name:</strong> Used to personalize your experience and pre-fill your profile</li>
+          <li><strong>Profile picture:</strong> Displayed in the application interface (optional)</li>
+        </ul>
+
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">5.2 How We Use Google User Data</h3>
+        <p className="text-gray-700 mb-4">We use Google user data solely for the following purposes:</p>
+        <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+          <li><strong>Authentication:</strong> To verify your identity and create/access your Hiredoor account</li>
+          <li><strong>Account identification:</strong> Your email serves as your unique identifier in our system</li>
+          <li><strong>Personalization:</strong> Your name is used to personalize generated outreach emails</li>
+          <li><strong>Communication:</strong> We may send service-related emails to your Google email address</li>
+        </ul>
+
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">5.3 How We Store Google User Data</h3>
+        <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+          <li>Your Google email and name are stored in our secure database as part of your user profile</li>
+          <li>Data is encrypted in transit (TLS) and at rest</li>
+          <li>We do not store your Google password or OAuth refresh tokens beyond what is necessary for authentication</li>
+        </ul>
+
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">5.4 How We Share Google User Data</h3>
+        <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+          <li><strong>We do not sell</strong> Google user data to third parties</li>
+          <li><strong>We do not use</strong> Google user data for advertising purposes</li>
+          <li><strong>We do not share</strong> Google user data with third parties except as necessary to provide the Service (e.g., your name may be included in outreach emails you choose to send)</li>
+          <li>Your email may be shared with our payment processor solely for billing purposes</li>
+        </ul>
+
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">5.5 Data Retention and Deletion</h3>
+        <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+          <li>Google user data is retained for as long as your account is active</li>
+          <li>You may request deletion of your account and all associated data by contacting us at <a href={`mailto:${contactEmail}`} className="text-primary hover:underline">{contactEmail}</a></li>
+          <li>Upon account deletion, your Google user data will be permanently deleted within 30 days</li>
+        </ul>
+
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">5.6 Revoking Access</h3>
+        <p className="text-gray-700">
+          You can revoke Hiredoor's access to your Google account at any time by visiting your{' '}
+          <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Account Permissions</a>
+          {' '}page. Note that revoking access will prevent you from signing into Hiredoor with that Google account.
+        </p>
+      </section>
+
+      {/* Section 6: Data Retention */}
       <section id="data-retention" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Data Retention</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Data Retention</h2>
         <p className="text-gray-700 mb-4">We retain your data as follows:</p>
         <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
           <li><strong>Account Data:</strong> Retained for as long as your account is active. Upon account deletion, your personal data is deleted within 30 days.</li>
@@ -139,7 +194,7 @@ export function Privacy() {
 
       {/* Section 6: Data Security */}
       <section id="data-security" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Data Security</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Data Security</h2>
         <p className="text-gray-700 mb-4">We implement appropriate technical and organizational measures to protect your personal data, including:</p>
         <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
           <li><strong>Encryption in Transit:</strong> All data transmitted between your browser and our servers is encrypted using TLS/HTTPS.</li>
@@ -156,7 +211,7 @@ export function Privacy() {
 
       {/* Section 7: Your Rights and Choices */}
       <section id="your-rights" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Your Rights and Choices</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Your Rights and Choices</h2>
         <p className="text-gray-700 mb-4">You have the following rights regarding your personal data:</p>
         <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
           <li><strong>Access:</strong> Request a copy of the personal data we hold about you.</li>
@@ -181,7 +236,7 @@ export function Privacy() {
 
       {/* Section 8: GDPR Compliance */}
       <section id="gdpr" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">8. GDPR Compliance (EU Users)</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">9. GDPR Compliance (EU Users)</h2>
         <p className="text-gray-700 mb-4">If you are located in the European Economic Area (EEA), United Kingdom, or Switzerland, you have additional rights under the General Data Protection Regulation (GDPR):</p>
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">Legal Basis for Processing</h3>
@@ -209,7 +264,7 @@ export function Privacy() {
 
       {/* Section 9: CCPA Compliance */}
       <section id="ccpa" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">9. CCPA Compliance (California Users)</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">10. CCPA Compliance (California Users)</h2>
         <p className="text-gray-700 mb-4">If you are a California resident, you have rights under the California Consumer Privacy Act (CCPA):</p>
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">Your CCPA Rights</h3>
@@ -235,7 +290,7 @@ export function Privacy() {
 
       {/* Section 10: Cookies and Tracking */}
       <section id="cookies" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Cookies and Tracking</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Cookies and Tracking</h2>
         <p className="text-gray-700 mb-4">Hiredoor uses minimal cookies and tracking technologies:</p>
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">Essential Cookies</h3>
@@ -258,7 +313,7 @@ export function Privacy() {
 
       {/* Section 11: Children's Privacy */}
       <section id="children" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Children's Privacy</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">12. Children's Privacy</h2>
         <p className="text-gray-700">
           Hiredoor is not intended for individuals under the age of 16. We do not knowingly collect personal information from children under 16. If you are a parent or guardian and believe your child has provided us with personal information, please contact us at <a href={`mailto:${contactEmail}`} className="text-primary hover:underline">{contactEmail}</a>, and we will delete such information.
         </p>
@@ -266,7 +321,7 @@ export function Privacy() {
 
       {/* Section 12: International Data Transfers */}
       <section id="international" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">12. International Data Transfers</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">13. International Data Transfers</h2>
         <p className="text-gray-700 mb-4">
           Your data may be transferred to and processed in countries other than your country of residence. These countries may have different data protection laws. When we transfer data internationally, we implement appropriate safeguards:
         </p>
@@ -279,7 +334,7 @@ export function Privacy() {
 
       {/* Section 13: Changes to This Policy */}
       <section id="changes" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">13. Changes to This Policy</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">14. Changes to This Policy</h2>
         <p className="text-gray-700">
           We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. We will notify you of any material changes by posting the updated policy on this page with a new "Last updated" date. For significant changes, we may also notify you via email. We encourage you to review this policy periodically.
         </p>
@@ -287,7 +342,7 @@ export function Privacy() {
 
       {/* Section 14: Contact Us */}
       <section id="contact" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">14. Contact Us</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">15. Contact Us</h2>
         <p className="text-gray-700 mb-4">
           If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:
         </p>

@@ -32,7 +32,7 @@ export function Terms() {
           <li><a href="#service-description" className="hover:underline">Service Description</a></li>
           <li><a href="#acceptable-use" className="hover:underline">Acceptable Use Policy</a></li>
           <li><a href="#payments" className="hover:underline">Payments and Subscriptions</a></li>
-          <li><a href="#tokens" className="hover:underline">Token System</a></li>
+          <li><a href="#credits" className="hover:underline">Credit System</a></li>
           <li><a href="#intellectual-property" className="hover:underline">Intellectual Property</a></li>
           <li><a href="#user-content" className="hover:underline">User Content</a></li>
           <li><a href="#third-party" className="hover:underline">Third-Party Services</a></li>
@@ -158,7 +158,7 @@ export function Terms() {
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">6.1 Subscription Plans</h3>
         <p className="text-gray-700 mb-4">
-          We offer various subscription plans with different features and token allocations. Current pricing and plan details are available on our pricing page. Prices are subject to change with notice.
+          We offer various subscription plans with different features and credit allocations. Current pricing and plan details are available on our pricing page. Prices are subject to change with notice.
         </p>
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">6.2 Billing</h3>
@@ -174,7 +174,7 @@ export function Terms() {
           <li>You may cancel your subscription at any time through your account settings</li>
           <li>Cancellation takes effect at the end of your current billing period</li>
           <li>You will retain access to paid features until the end of your billing period</li>
-          <li>Unused tokens do not roll over after cancellation</li>
+          <li>Unused credits do not roll over after cancellation</li>
         </ul>
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">6.4 Refunds</h3>
@@ -183,25 +183,25 @@ export function Terms() {
         </p>
       </section>
 
-      {/* Section 7: Token System */}
-      <section id="tokens" className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Token System</h2>
+      {/* Section 7: Credit System */}
+      <section id="credits" className="mb-10">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Credit System</h2>
 
-        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">7.1 Token Usage</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">7.1 Credit Usage</h3>
         <p className="text-gray-700 mb-4">
-          The Service uses a token-based system for contact discovery. Each job search that successfully returns contacts consumes one token. Token allocations vary by subscription plan.
+          The Service uses a credit-based system for contact discovery. Each job search that successfully returns contacts consumes one credit. Credit allocations vary by subscription plan.
         </p>
 
-        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">7.2 Token Renewal</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">7.2 Credit Renewal</h3>
         <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-          <li>Subscription tokens reset monthly on your billing date</li>
-          <li>Unused subscription tokens do not roll over to the next month</li>
-          <li>Bonus tokens (purchased separately) do not expire while your account is active</li>
+          <li>Subscription credits reset monthly on your billing date</li>
+          <li>Unused subscription credits do not roll over to the next month</li>
+          <li>Bonus credits (purchased separately) do not expire while your account is active</li>
         </ul>
 
-        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">7.3 Token Purchases</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">7.3 Credit Purchases</h3>
         <p className="text-gray-700">
-          You may purchase additional token packs at any time. Token pack purchases are non-refundable. Purchased tokens remain available until used or until account termination.
+          You may purchase additional credit packs at any time. Credit pack purchases are non-refundable. Purchased credits remain available until used or until account termination.
         </p>
       </section>
 
@@ -348,7 +348,7 @@ export function Terms() {
 
         <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">14.3 Effect of Termination</h3>
         <p className="text-gray-700">
-          Upon termination, your license to use the Service terminates, your data may be deleted (subject to our data retention policies), and you will not be entitled to refunds for unused tokens or subscription periods.
+          Upon termination, your license to use the Service terminates, your data may be deleted (subject to our data retention policies), and you will not be entitled to refunds for unused credits or subscription periods.
         </p>
       </section>
 
