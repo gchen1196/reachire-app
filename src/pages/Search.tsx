@@ -23,8 +23,8 @@ import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
 // Helper to convert API types to frontend types
 function apiJobToJobInfo(job: ApiJob): JobInfo {
   return {
-    company: job.company,
-    domain: job.companyDomain || '',
+    company: job.resolvedCompanyName || job.companyNames[0] || '',
+    domain: job.resolvedDomain || '',
     role: job.role,
     department: job.department || '',
     requirements: job.requirementsSummary || undefined,
@@ -76,7 +76,8 @@ export function Search() {
     switch (response.status) {
       case 'success': {
         const jobInfoData = apiJobToJobInfo(response.job)
-        const contactsData = response.contacts.map(c => apiContactToContact(c, response.job.company))
+        const companyName = response.job.resolvedCompanyName || response.job.companyNames[0] || ''
+        const contactsData = response.contacts.map(c => apiContactToContact(c, companyName))
 
         setJobInfo(jobInfoData)
         setContacts(contactsData)

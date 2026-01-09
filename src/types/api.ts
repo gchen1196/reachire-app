@@ -46,8 +46,10 @@ export interface ApiContact {
 
 export interface ApiJob {
   url: string
-  company: string
-  companyDomain: string | null
+  companyNames: string[]
+  companyDomains: string[]
+  resolvedDomain: string | null
+  resolvedCompanyName: string | null
   role: string
   department: Department | null
   seniorityLevel: SeniorityLevel | null
