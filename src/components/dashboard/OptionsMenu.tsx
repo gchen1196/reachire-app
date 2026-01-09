@@ -13,18 +13,19 @@ interface OptionsMenuProps {
 
 export function OptionsMenu({ options }: OptionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+  const desktopMenuRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        menuRef.current &&
-        buttonRef.current &&
-        !menuRef.current.contains(event.target as Node) &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node
+      const isInsideMobileMenu = mobileMenuRef.current?.contains(target)
+      const isInsideDesktopMenu = desktopMenuRef.current?.contains(target)
+      const isInsideButton = buttonRef.current?.contains(target)
+
+      if (!isInsideMobileMenu && !isInsideDesktopMenu && !isInsideButton) {
         setIsOpen(false)
       }
     }
@@ -66,7 +67,7 @@ export function OptionsMenu({ options }: OptionsMenuProps) {
 
           {/* Mobile: Bottom sheet */}
           <div
-            ref={menuRef}
+            ref={mobileMenuRef}
             className="sm:hidden fixed inset-x-0 bottom-0 bg-white rounded-t-2xl shadow-xl"
           >
             <div className="py-2">
@@ -91,11 +92,13 @@ export function OptionsMenu({ options }: OptionsMenuProps) {
 
           {/* Desktop: Dropdown positioned near button */}
           <div
-            className="hidden sm:block absolute bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[160px] z-50"
+            ref={desktopMenuRef}
+            className="hidden sm:block absolute bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-40 z-50"
             style={{
               top: buttonRef.current ? buttonRef.current.getBoundingClientRect().bottom + 4 : 0,
               right: buttonRef.current ? window.innerWidth - buttonRef.current.getBoundingClientRect().right : 0,
             }}
+            onClick={(e) => e.stopPropagation()}
           >
             {options.map((option, index) => (
               <button

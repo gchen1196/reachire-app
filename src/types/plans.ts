@@ -27,7 +27,7 @@ export const PLANS: PlanConfig[] = [
   {
     id: 'starter',
     name: 'Starter',
-    price: 19,
+    price: 15,
     tokens: 25,
     description: 'Great for occasional job searching',
     popular: false,

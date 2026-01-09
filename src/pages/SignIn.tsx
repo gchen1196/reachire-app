@@ -50,7 +50,10 @@ export function SignIn() {
 
           {/* Footer */}
           <p className="text-center text-xs text-gray-400 mt-6">
-            By continuing, you agree to our Terms of Service
+            By continuing, you agree to our{' '}
+            <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>
+            {' '}and{' '}
+            <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
           </p>
         </div>
       </div>

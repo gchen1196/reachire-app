@@ -89,6 +89,7 @@ export function Home() {
         </Link>
         <p className="text-sm text-gray-500 mt-3">Free to try. No credit card required.</p>
       </section>
+
     </div>
   )
 }

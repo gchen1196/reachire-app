@@ -12,6 +12,8 @@ import { Resume } from './pages/Resume'
 import { Subscription } from './pages/Subscription'
 import { Credits } from './pages/Credits'
 import { Pricing } from './pages/Pricing'
+import { Privacy } from './pages/Privacy'
+import { Terms } from './pages/Terms'
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
             }
           />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route
             path="/search"
             element={

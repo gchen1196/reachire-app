@@ -195,9 +195,13 @@ export function Layout({ children }: LayoutProps) {
 
       <footer className="bg-white border-t border-gray-200">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <p className="text-center text-sm text-gray-500">
-            © 2025 Hiredoor
-          </p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 text-sm text-gray-500">
+            <span>© 2025 Hiredoor</span>
+            <span className="hidden sm:inline">·</span>
+            <Link to="/terms" className="hover:text-gray-700">Terms of Service</Link>
+            <span className="hidden sm:inline">·</span>
+            <Link to="/privacy" className="hover:text-gray-700">Privacy Policy</Link>
+          </div>
         </div>
       </footer>
     </div>
