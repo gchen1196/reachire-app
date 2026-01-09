@@ -6,11 +6,11 @@ export function Home() {
       {/* Hero */}
       <section className="text-center max-w-3xl mx-auto bg-gradient-to-br from-primary-50 to-accent-50 rounded-[var(--radius-xl)] p-8 sm:p-12 animate-fade-in">
         <p className="text-sm font-medium text-accent mb-3">Job search, supercharged</p>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-4">
-          Apply smarter.<br />Land more interviews.
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl text-primary mb-4">
+          Apply <span className="font-bold">smarter</span>.<br />Land <span className="font-bold">more interviews</span>.
         </h1>
         <p className="text-lg text-gray-600 mb-8">
-          Turn cold applications into warm introductions.
+          Turn cold applications into warm introductions
         </p>
         <Link
           to="/signin"
@@ -99,7 +99,7 @@ export function Home() {
       <section className="text-center animate-fade-in">
         <Link
           to="/signin"
-          className="btn btn-primary btn-pill px-8 py-4 text-lg font-semibold shadow-lg"
+          className="btn btn-primary btn-pill px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl"
         >
           Start Finding Contacts
         </Link>
