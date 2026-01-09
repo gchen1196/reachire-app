@@ -142,17 +142,17 @@ export function Resume() {
       <div className="flex items-center gap-3">
         <Link
           to="/account"
-          className="p-2 -ml-2 text-gray-400 hover:text-gray-600 transition-colors"
+          className="p-2 -ml-2 text-gray-400 hover:text-primary transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">Resume</h1>
+        <h1 className="text-xl font-bold text-primary">Resume</h1>
       </div>
 
       {/* Upload Section */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="card-static p-6">
         {/* Hidden file input */}
         <input
           ref={fileInputRef}
@@ -168,14 +168,14 @@ export function Resume() {
             <Spinner />
           </div>
         ) : resumeFilename ? (
-          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-3 p-4 bg-primary-50 rounded-lg">
+            <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center shrink-0">
               <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-gray-900 truncate">{resumeFilename}</p>
+              <p className="font-medium text-primary truncate">{resumeFilename}</p>
               {resumeUrl && (
                 <a
                   href={resumeUrl}
@@ -236,15 +236,15 @@ export function Resume() {
                   <button
                     onClick={triggerFileInput}
                     disabled={isUploading}
-                    className="w-full flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-colors text-left disabled:opacity-50"
+                    className="w-full flex items-center gap-3 p-4 bg-primary-50 rounded-lg border border-primary-100 hover:bg-primary-100 transition-colors text-left disabled:opacity-50"
                   >
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center shrink-0">
                       <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 truncate">{stagedFile.name}</p>
+                      <p className="font-medium text-primary truncate">{stagedFile.name}</p>
                       <p className="text-sm text-gray-500">{(stagedFile.size / 1024).toFixed(1)} KB - Click to replace</p>
                     </div>
                     <span
@@ -264,7 +264,7 @@ export function Resume() {
                   <button
                     onClick={handleUploadStaged}
                     disabled={isUploading}
-                    className="w-full py-3 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="w-full py-3 px-4 btn btn-accent-glow btn-pill font-medium disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {isUploading ? (
                       <>
@@ -281,17 +281,17 @@ export function Resume() {
                 <button
                   onClick={triggerFileInput}
                   disabled={isUploading}
-                  className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
+                  className="w-full border-2 border-dashed border-primary-100 rounded-lg p-8 hover:border-accent hover:bg-accent-50 transition-colors disabled:opacity-50"
                 >
                   <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                      <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center">
+                      <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                       </svg>
                     </div>
                     <div className="text-center">
-                      <p className="font-medium text-gray-900">Upload your resume</p>
-                      <p className="text-sm text-gray-500 mt-1">PDF, DOCX, DOC, or TXT (max 5MB)</p>
+                      <p className="font-medium text-primary">Drop your file here or click to browse</p>
+                      <p className="text-sm text-gray-500 mt-1">.pdf, .docx, .doc, .txt up to 5MB</p>
                     </div>
                   </div>
                 </button>
@@ -312,7 +312,7 @@ export function Resume() {
                 <button
                   onClick={handlePasteSubmit}
                   disabled={isUploading || !pastedText.trim()}
-                  className="w-full py-3 px-4 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-3 px-4 btn btn-accent-glow btn-pill font-medium disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {isUploading ? (
                     <>
@@ -330,12 +330,12 @@ export function Resume() {
       </div>
 
       {/* Info note */}
-      <div className="bg-blue-50 rounded-lg p-4">
+      <div className="bg-accent-50 rounded-lg p-4">
         <div className="flex gap-3">
-          <svg className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <div className="text-sm text-blue-800">
+          <div className="text-sm text-primary">
             <p className="font-medium">Why upload your resume?</p>
             <p className="mt-1">
               Your resume is used to generate personalized outreach emails that highlight your relevant experience for each job.

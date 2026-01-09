@@ -15,7 +15,7 @@ export function JobDetails({ job }: JobDetailsProps) {
   const companyUrl = job.domain ? `https://${job.domain}` : null
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="card-static p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           {companyUrl ? (
@@ -23,12 +23,12 @@ export function JobDetails({ job }: JobDetailsProps) {
               href={companyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-gray-900 hover:text-primary truncate block"
+              className="font-semibold text-primary hover:text-primary-dark transition-colors truncate block"
             >
               {job.company}
             </a>
           ) : (
-            <h3 className="font-semibold text-gray-900 truncate">{job.company}</h3>
+            <h3 className="font-semibold text-primary truncate">{job.company}</h3>
           )}
           <p className="text-sm text-gray-600 truncate">{job.role}</p>
         </div>
@@ -37,7 +37,7 @@ export function JobDetails({ job }: JobDetailsProps) {
           href={job.jobUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-shrink-0 p-2 text-gray-400 hover:text-primary transition-colors"
+          className="flex-shrink-0 p-2 text-gray-400 hover:text-accent hover:bg-accent-50 rounded-full transition-all"
           title="View job posting"
         >
           {/* Briefcase icon */}

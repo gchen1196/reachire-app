@@ -39,16 +39,8 @@ export function StatusSelectModal({
       <div className="fixed inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2">
         <div className="bg-white sm:rounded-lg sm:max-w-sm sm:w-full sm:mx-auto rounded-t-2xl shadow-xl">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <h3 className="font-semibold text-gray-900">Update Status</h3>
-            <button
-              onClick={onClose}
-              className="p-2 -m-2 text-gray-400 hover:text-gray-600"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="font-semibold text-primary text-center">Update Status</h3>
           </div>
 
           {/* Options */}
@@ -62,11 +54,11 @@ export function StatusSelectModal({
                   key={status}
                   onClick={() => handleSelect(status)}
                   className={`w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-left transition-colors ${
-                    isSelected ? 'bg-primary/5' : 'active:bg-gray-100 sm:hover:bg-gray-50'
+                    isSelected ? 'bg-primary-50' : 'active:bg-gray-100 sm:hover:bg-primary-50'
                   }`}
                 >
                   <span className={`w-3 h-3 rounded-full ${config.bgColor} ${
-                    status === 'to_contact' ? 'border border-gray-300' : ''
+                    status === 'to_contact' ? 'border border-primary-100' : ''
                   }`} />
                   <span className={`flex-1 ${isSelected ? 'font-medium text-primary' : 'text-gray-700'}`}>
                     {config.label}

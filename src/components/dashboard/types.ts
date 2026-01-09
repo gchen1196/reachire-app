@@ -29,7 +29,7 @@ export const STATUS_PRIORITY: Record<OutreachStatus, number> = {
 }
 
 export const STATUS_CONFIG: Record<OutreachStatus, { label: string; color: string; bgColor: string }> = {
-  to_contact: { label: 'To Contact', color: 'text-gray-700', bgColor: 'bg-gray-100' },
+  to_contact: { label: 'To Contact', color: 'text-accent', bgColor: 'bg-accent-50' },
   emailed: { label: 'Emailed', color: 'text-blue-700', bgColor: 'bg-blue-100' },
   replied: { label: 'Replied', color: 'text-green-700', bgColor: 'bg-green-100' },
   interviewing: { label: 'Interviewing', color: 'text-yellow-700', bgColor: 'bg-yellow-100' },

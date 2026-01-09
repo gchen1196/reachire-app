@@ -10,10 +10,6 @@ interface ContactRowProps {
 }
 
 export function ContactRow({ contact, onStatusChange, onEmail, onDelete }: ContactRowProps) {
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-  }
-
   const showEmailButton = contact.status === 'to_contact'
 
   const menuOptions = [
@@ -51,8 +47,8 @@ export function ContactRow({ contact, onStatusChange, onEmail, onDelete }: Conta
       {/* Contact info row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-gray-600 text-xs font-medium">
+          <div className="w-8 h-8 bg-primary-50 rounded-full flex items-center justify-center shrink-0">
+            <span className="text-primary text-xs font-medium">
               {contact.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </span>
           </div>
@@ -62,21 +58,30 @@ export function ContactRow({ contact, onStatusChange, onEmail, onDelete }: Conta
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Email button - circle icon on desktop, hidden on mobile */}
+          {showEmailButton && onEmail && (
+            <button
+              onClick={onEmail}
+              className="hidden sm:flex w-8 h-8 bg-accent text-white rounded-full items-center justify-center hover:bg-accent-dark transition-colors"
+              title="Send email"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </button>
+          )}
           <StatusButton value={contact.status} onChange={onStatusChange} />
-          <span className="text-xs text-gray-400 hidden sm:block">
-            {formatDate(contact.lastActionAt)}
-          </span>
           {menuOptions.length > 0 && <OptionsMenu options={menuOptions} />}
         </div>
       </div>
 
-      {/* Email button row */}
+      {/* Email button row - mobile only */}
       {showEmailButton && onEmail && (
-        <div className="mt-3 flex justify-center">
+        <div className="mt-3 flex justify-center sm:hidden">
           <button
             onClick={onEmail}
-            className="flex items-center justify-center gap-2 px-5 py-2 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
+            className="btn btn-accent btn-pill px-5 py-2 text-sm gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

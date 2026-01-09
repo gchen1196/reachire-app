@@ -1,11 +1,236 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 
 @theme {
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
-  --color-primary-light: #60a5fa;
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Nunito Sans", sans-serif;
 
-  --color-secondary: #8b5cf6;
-  --color-secondary-dark: #7c3aed;
-  --color-secondary-light: #a78bfa;
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+  --shadow-md: 0 6px 12px -2px rgb(0 0 0 / 0.08), 0 3px 6px -3px rgb(0 0 0 / 0.08);
+  --shadow-lg: 0 10px 20px -3px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 40px -5px rgb(0 0 0 / 0.12), 0 8px 16px -6px rgb(0 0 0 / 0.1);
+
+  /* Primary - Brand Navy */
+  --color-primary: #0F3D5C;
+  --color-primary-dark: #0A2A40;
+  --color-primary-light: #1A5A82;
+  --color-primary-50: #E8F1F5;
+  --color-primary-100: #C5DCE8;
+
+  /* Accent - Deeper Cyan (for buttons) */
+  --color-accent: #00A3CC;
+  --color-accent-dark: #008AB3;
+  --color-accent-light: #33B8D9;
+  --color-accent-50: #E0F5FA;
+
+  /* Cyan - Bright (for icons and highlights) */
+  --color-cyan: #00D9FF;
+
+  /* Secondary - Coral */
+  --color-secondary: #FF6B35;
+  --color-secondary-dark: #E55A2B;
+  --color-secondary-light: #FF8F66;
+  --color-secondary-50: #FFF0EB;
+
+  /* Gold - Premium tier */
+  --color-gold: #D4A017;
+  --color-gold-dark: #B8860B;
+  --color-gold-light: #F0C040;
+  --color-gold-50: #FDF8E8;
+}
+
+/* Base typography */
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered fade-in for lists/grids */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Staggered delays for children */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 500ms; }
+
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* ========================================
+   CARD STYLES
+   ======================================== */
+.card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.card-static {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+/* ========================================
+   BUTTON STYLES
+   ======================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-accent {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.btn-accent:hover {
+  background-color: var(--color-accent-dark);
+  box-shadow: var(--shadow-md);
+}
+
+/* Premium accent button with gradient, glow, and hover effects */
+.btn-accent-glow {
+  background: linear-gradient(to bottom, var(--color-accent-light), var(--color-accent));
+  color: white;
+  box-shadow: 0 4px 14px rgba(0, 163, 204, 0.4);
+  transition: all 0.2s ease;
+}
+
+.btn-accent-glow:hover {
+  box-shadow: 0 6px 20px rgba(0, 163, 204, 0.5);
+  transform: scale(1.02);
+}
+
+.btn-accent-glow:active {
+  transform: scale(1);
+}
+
+.btn-accent-glow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+/* Pill-shaped buttons for full-width/longer buttons */
+.btn-pill {
+  border-radius: 9999px;
+}
+
+/* ========================================
+   INTERACTIVE ELEMENTS
+   ======================================== */
+
+/* Hover lift effect for any element */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Subtle scale on hover */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Focus ring for accessibility */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent-50), 0 0 0 4px var(--color-accent);
 }

@@ -27,14 +27,14 @@ export function StatusFilter({ activeFilter, onFilterChange, counts }: StatusFil
           <button
             key={value}
             onClick={() => onFilterChange(value)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`btn-pill shrink-0 px-3 py-1.5 text-sm font-medium transition-colors ${
               isActive
                 ? 'bg-primary text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-700'
             }`}
           >
             {label}
-            <span className={`ml-1.5 ${isActive ? 'text-white/80' : 'text-gray-400'}`}>
+            <span className={`ml-1.5 ${isActive ? 'text-white/70' : 'text-gray-400'}`}>
               ({count})
             </span>
           </button>

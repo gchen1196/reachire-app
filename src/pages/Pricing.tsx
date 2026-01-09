@@ -52,17 +52,27 @@ export function Pricing() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">
-          {isSubscribed ? 'Manage Your Plan' : 'Choose Your Plan'}
-        </h1>
-        {!isSubscribed && (
+      {/* Header - different layout for subscribers vs non-subscribers */}
+      {isSubscribed ? (
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate(returnPath)}
+            className="p-2 -ml-2 text-gray-400 hover:text-primary transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 className="text-xl font-bold text-primary">Manage Your Plan</h1>
+        </div>
+      ) : (
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-primary">Choose Your Plan</h1>
           <p className="text-gray-600 mt-2">
-            Subscribe to start getting more interviews
+            Land <span className="text-accent font-medium">more interviews</span>, faster
           </p>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Error message */}
       {error && (
@@ -82,13 +92,11 @@ export function Pricing() {
       )}
 
       {/* Plan cards */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <PlanSelector
-          onSelectPlan={handleSelectPlan}
-          isProcessing={isProcessing}
-          currentPlan={isSubscribed ? plan : undefined}
-        />
-      </div>
+      <PlanSelector
+        onSelectPlan={handleSelectPlan}
+        isProcessing={isProcessing}
+        currentPlan={isSubscribed ? plan : undefined}
+      />
 
       {/* Cancel/Manage subscription button for subscribers */}
       {isSubscribed && (
@@ -102,44 +110,44 @@ export function Pricing() {
       )}
 
       {/* What's included */}
-      <div className="bg-white rounded-lg shadow">
+      <div className="card-static">
         <div className="p-4 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-900">What's included in each credit?</h2>
+          <h2 className="font-semibold text-primary">What's included in each credit?</h2>
         </div>
         <div className="p-4">
           <ul className="space-y-3 text-sm text-gray-600">
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>1 job search with up to 12 verified contact emails</span>
             </li>
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>AI-personalized outreach emails for each contact</span>
             </li>
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>One-click email sending directly from the app</span>
             </li>
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>Track and manage all your job applications</span>
             </li>
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>Only charged when contacts are found</span>
             </li>
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span>Additional credits available to purchase anytime</span>
@@ -148,13 +156,6 @@ export function Pricing() {
         </div>
       </div>
 
-      {/* Back link */}
-      <button
-        onClick={() => navigate(returnPath)}
-        className="text-sm text-gray-500 hover:text-gray-700 text-center"
-      >
-        Go back
-      </button>
     </div>
   )
 }

@@ -5,19 +5,19 @@ export function SignIn() {
   const { signInWithGoogle } = useAuth()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-accent-50">
+      <div className="w-full max-w-sm px-4 animate-fade-in">
         {/* Modal-like card */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+        <div className="card-static p-8 shadow-xl">
           {/* Logo */}
-          <Link to="/" className="flex items-center justify-center gap-2 mb-6">
+          <Link to="/" className="flex items-center justify-center gap-2 mb-6 hover:opacity-80 transition-opacity">
             <img src="/logo.svg" alt="Hiredoor" className="h-9" />
             <img src="/logo_text.svg" alt="" className="h-5" />
           </Link>
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-xl font-bold text-gray-900">
+            <h1 className="text-xl font-bold text-primary">
               Sign in or create your account
             </h1>
           </div>
@@ -25,7 +25,7 @@ export function SignIn() {
           {/* Google Sign In Button */}
           <button
             onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all font-medium"
+            className="btn w-full gap-3 bg-white border border-gray-200 text-gray-700 py-3 px-4 hover:bg-gray-50 hover:border-primary-100 hover:shadow-md focus-ring"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -51,11 +51,18 @@ export function SignIn() {
           {/* Footer */}
           <p className="text-center text-xs text-gray-400 mt-6">
             By continuing, you agree to our{' '}
-            <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>
+            <Link to="/terms" className="text-primary hover:text-primary-dark transition-colors">Terms of Service</Link>
             {' '}and{' '}
-            <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+            <Link to="/privacy" className="text-primary hover:text-primary-dark transition-colors">Privacy Policy</Link>
           </p>
         </div>
+
+        {/* Back to home link */}
+        <p className="text-center mt-6">
+          <Link to="/" className="text-sm text-gray-500 hover:text-primary transition-colors">
+            &larr; Back to home
+          </Link>
+        </p>
       </div>
     </div>
   )

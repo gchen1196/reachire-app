@@ -67,12 +67,11 @@ export function Subscription() {
       <div className="flex flex-col gap-6">
         <Link
           to="/account"
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 w-fit"
+          className="p-2 -ml-2 text-gray-400 hover:text-primary transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span>Back to Account</span>
         </Link>
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -83,18 +82,18 @@ export function Subscription() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Back link */}
-      <Link
-        to="/account"
-        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 w-fit"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Back to Account</span>
-      </Link>
-
-      <h1 className="text-2xl font-bold text-gray-900">Subscription & Billing</h1>
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <Link
+          to="/account"
+          className="p-2 -ml-2 text-gray-400 hover:text-primary transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </Link>
+        <h1 className="text-xl font-bold text-primary">Subscription & Billing</h1>
+      </div>
 
       {/* Cancellation notice */}
       {isCancelling && cancelAt && (
@@ -110,14 +109,14 @@ export function Subscription() {
       )}
 
       {/* Current Plan & Credits */}
-      <div className="bg-white rounded-lg shadow">
+      <div className="card-static">
         <div className="p-4 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-900">Current Plan</h2>
+          <h2 className="font-semibold text-primary">Current Plan</h2>
         </div>
         <div className="p-4 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-gray-900">{formatPlanName(plan)}</p>
+              <p className="font-medium text-primary">{formatPlanName(plan)}</p>
               {isSubscribed && (
                 <p className="text-sm text-gray-500">
                   ${PLANS.find(p => p.id === plan)?.price ?? 0}/month
@@ -132,10 +131,10 @@ export function Subscription() {
           </div>
 
           {/* Credit balance */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-primary-50 rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Credits Remaining</span>
-              <span className={`text-2xl font-bold ${isOutOfTokens ? 'text-red-600' : 'text-gray-900'}`}>
+              <span className="text-sm font-medium text-primary">Credits Remaining</span>
+              <span className={`text-2xl font-bold ${isOutOfTokens ? 'text-red-600' : 'text-primary'}`}>
                 {totalTokens}
               </span>
             </div>
@@ -164,7 +163,7 @@ export function Subscription() {
           {isSubscribed && (
             <button
               onClick={() => navigate('/pricing', { state: { from: '/account/subscription' } })}
-              className="w-full py-2.5 px-4 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              className="w-full py-2.5 px-4 border border-primary-100 text-primary text-sm font-medium rounded-full hover:bg-primary-50 transition-colors"
             >
               Manage Subscription
             </button>
@@ -174,7 +173,7 @@ export function Subscription() {
           {!isSubscribed && (
             <button
               onClick={() => navigate('/pricing', { state: { from: '/account/subscription' } })}
-              className="w-full py-2.5 px-4 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors"
+              className="w-full py-3 px-4 btn btn-accent-glow btn-pill font-medium"
             >
               {isExpired ? 'Resubscribe' : 'Subscribe Now'}
             </button>
@@ -184,31 +183,32 @@ export function Subscription() {
 
       {/* Credit Packs (only for subscribers) */}
       {isSubscribed && (
-        <div className="bg-white rounded-lg shadow">
+        <div className="card-static">
           <div className="p-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-900">Buy More Credits</h2>
+            <h2 className="font-semibold text-primary">Buy More Credits</h2>
             <p className="text-sm text-gray-500 mt-1">Credit packs never expire</p>
           </div>
           <div className="p-4 space-y-3">
             {CREDIT_PACKS.map((pack) => (
-              <div
+              <button
                 key={pack.tokens}
-                className="border border-gray-200 rounded-lg p-4 flex items-center justify-between"
+                onClick={() => handleBuyTokenPack(pack.tokens)}
+                disabled={isProcessing}
+                className="w-full border border-primary-100 rounded-lg p-4 flex items-center justify-between hover:bg-primary-50 hover:border-primary-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-left"
               >
                 <div>
-                  <p className="font-semibold text-gray-900">{pack.tokens} Credits</p>
+                  <p className="font-semibold text-primary">{pack.tokens} Credits</p>
                   <p className="text-sm text-gray-500">
                     ${(pack.price / pack.tokens).toFixed(2)}/credit
                   </p>
                 </div>
-                <button
-                  onClick={() => handleBuyTokenPack(pack.tokens)}
-                  disabled={isProcessing}
-                  className="py-2 px-4 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
-                >
-                  ${pack.price}
-                </button>
-              </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-primary">${pack.price}</span>
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </button>
             ))}
           </div>
         </div>
