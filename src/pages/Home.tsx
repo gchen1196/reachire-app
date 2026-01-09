@@ -7,7 +7,7 @@ export function Home() {
       <section className="text-center max-w-3xl mx-auto bg-gradient-to-br from-primary-50 to-accent-50 rounded-[var(--radius-xl)] p-8 sm:p-12 animate-fade-in">
         <p className="text-sm font-medium text-accent mb-3">Job search, supercharged</p>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl text-primary mb-4">
-          Apply <span className="font-bold">smarter</span>.<br />Land <span className="font-bold">more interviews</span>.
+          Apply <span className="font-bold">smarter</span>.<br />Land more <span className="font-bold">interviews</span>.
         </h1>
         <p className="text-lg text-gray-600 mb-8">
           Turn cold applications into warm introductions
@@ -33,7 +33,7 @@ export function Home() {
             </div>
             <h3 className="font-semibold text-primary mb-2">Paste a job link</h3>
             <p className="text-sm text-gray-600">
-              Drop in any job posting URL from LinkedIn, Indeed, or company sites.
+              Drop in any job posting URL from LinkedIn, Indeed, or company sites
             </p>
           </div>
           {/* Step 2 - Find */}
@@ -45,7 +45,7 @@ export function Home() {
             </div>
             <h3 className="font-semibold text-primary mb-2">Find contacts</h3>
             <p className="text-sm text-gray-600">
-              Get verified emails to the right people at the company.
+              Get verified emails to the right people at the company
             </p>
           </div>
           {/* Step 3 - Reach out */}
@@ -57,7 +57,7 @@ export function Home() {
             </div>
             <h3 className="font-semibold text-primary mb-2">Reach out</h3>
             <p className="text-sm text-gray-600">
-              Generate personalized emails and track your progress in one place.
+              Generate personalized emails and track your progress in one place
             </p>
           </div>
         </div>
@@ -68,24 +68,24 @@ export function Home() {
         <div className="card-static p-6 sm:p-8 border-l-4 border-accent">
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
-              <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-6 h-6 bg-cyan/20 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
               <span className="text-gray-700">Skip the application black hole. Reach decision makers directly.</span>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-6 h-6 bg-cyan/20 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
               <span className="text-gray-700">AI-generated emails tailored to each job and contact.</span>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-6 h-6 bg-cyan/20 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
               </div>

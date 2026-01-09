@@ -61,10 +61,16 @@ export interface SearchJobSuccessResponse {
   contacts: ApiContact[]
 }
 
+export interface DomainOption {
+  domain: string
+  organization: string
+  emailCount: number
+}
+
 export interface SearchJobDomainSelectionRequiredResponse {
   status: 'domain_selection_required'
   job: ApiJob
-  domains: string[]
+  domains: DomainOption[]
 }
 
 export interface SearchJobDomainNotFoundResponse {

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { JobInfo, Contact } from '../components/search'
+import type { DomainOption } from '../types/api'
 
 type SearchState =
   | 'initial'
@@ -15,14 +16,14 @@ interface SearchStore {
   jobInfo: JobInfo | null
   contacts: Contact[]
   currentUrl: string
-  availableDomains: string[]
+  availableDomains: DomainOption[]
   searchError: string
 
   setSearchState: (state: SearchState) => void
   setJobInfo: (job: JobInfo | null) => void
   setContacts: (contacts: Contact[] | ((prev: Contact[]) => Contact[])) => void
   setCurrentUrl: (url: string) => void
-  setAvailableDomains: (domains: string[]) => void
+  setAvailableDomains: (domains: DomainOption[]) => void
   setSearchError: (error: string) => void
   resetSearch: () => void
 }
