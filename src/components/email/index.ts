@@ -1,1 +1,1 @@
-export { EmailDraftModal, type EmailDraft, type EmailContact } from './EmailDraftModal'
+export { EmailDraftModal, type EmailDraft, type EmailContact, type JobContext } from './EmailDraftModal'

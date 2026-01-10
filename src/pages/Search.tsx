@@ -15,7 +15,7 @@ import {
 } from '../components/search'
 import { EmailDraftModal, type EmailDraft, type EmailContact } from '../components/email'
 import { useSearchJob } from '../hooks/useSearchJob'
-import { useGenerateEmail } from '../hooks/useGenerateEmail'
+import { useEmailDraft } from '../hooks/useEmailDraft'
 import { useSearchStore } from '../stores/searchStore'
 import { getOutreachStatuses, getPreviousOutreaches, createOutreach, type PreviousOutreach } from '../api'
 import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
@@ -64,13 +64,31 @@ export function Search() {
 
   // Email modal state (local - doesn't need to persist)
   const [selectedContact, setSelectedContact] = useState<EmailContact | null>(null)
-  const [emailDraft, setEmailDraft] = useState<EmailDraft | null>(null)
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
   const [previousOutreaches, setPreviousOutreaches] = useState<PreviousOutreach[]>([])
 
   const queryClient = useQueryClient()
   const searchMutation = useSearchJob()
-  const emailMutation = useGenerateEmail()
+
+  // Email draft hook - manages draft state and LLM regeneration
+  const jobContext = jobInfo ? {
+    role: jobInfo.role,
+    company: jobInfo.company,
+    jobUrl: jobInfo.jobUrl,
+    requirements: jobInfo.requirements
+  } : null
+
+  const {
+    editedDraft,
+    setEditedDraft,
+    isRegenerating,
+    regenerate,
+    reset: resetEmailDraft
+  } = useEmailDraft({
+    contact: selectedContact,
+    job: jobContext,
+    isOpen: isEmailModalOpen
+  })
 
   const handleSearchResponse = async (response: SearchJobResponse) => {
     switch (response.status) {
@@ -167,40 +185,8 @@ export function Search() {
   const handleCloseEmailModal = () => {
     setIsEmailModalOpen(false)
     setSelectedContact(null)
-    setEmailDraft(null)
     setPreviousOutreaches([])
-    emailMutation.reset()
-  }
-
-  const generateEmailDraft = (contact: EmailContact) => {
-    if (!jobInfo) return
-
-    setEmailDraft(null)
-
-    emailMutation.mutate(
-      {
-        jobTitle: jobInfo.role,
-        companyName: jobInfo.company,
-        companyDescription: jobInfo.requirements,
-        jobUrl: jobInfo.jobUrl,
-        contactName: contact.name,
-        contactFirstName: contact.name.split(' ')[0]
-      },
-      {
-        onSuccess: (data) => {
-          setEmailDraft({
-            to: contact.email,
-            subject: data.subject,
-            body: data.body
-          })
-          toast.success('Email draft generated')
-        },
-        onError: (error) => {
-          toast.error(error instanceof Error ? error.message : 'Failed to generate email')
-          handleCloseEmailModal()
-        }
-      }
-    )
+    resetEmailDraft()
   }
 
   const handleGenerateEmail = async (contact: Contact) => {
@@ -216,7 +202,6 @@ export function Search() {
     setSelectedContact(emailContact)
     setIsEmailModalOpen(true)
     setPreviousOutreaches([])
-    generateEmailDraft(emailContact)
 
     // Fetch previous outreaches in background
     try {
@@ -225,11 +210,6 @@ export function Search() {
     } catch {
       // Silently fail - previous outreaches are optional
     }
-  }
-
-  const handleRegenerateDraft = () => {
-    if (!selectedContact) return
-    generateEmailDraft(selectedContact)
   }
 
   const handleOpenInGmail = async (draft: EmailDraft) => {
@@ -411,12 +391,13 @@ export function Search() {
       {selectedContact && (
         <EmailDraftModal
           contact={selectedContact}
-          draft={emailDraft}
+          draft={editedDraft}
           isOpen={isEmailModalOpen}
-          isLoading={emailMutation.isPending}
+          isRegenerating={isRegenerating}
           previousOutreaches={previousOutreaches}
           onClose={handleCloseEmailModal}
-          onRegenerate={handleRegenerateDraft}
+          onDraftChange={setEditedDraft}
+          onRegenerate={regenerate}
           onOpenInGmail={handleOpenInGmail}
         />
       )}
