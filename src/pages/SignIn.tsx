@@ -56,13 +56,6 @@ export function SignIn() {
             <Link to="/privacy" className="text-primary hover:text-primary-dark transition-colors">Privacy Policy</Link>
           </p>
         </div>
-
-        {/* Back to home link */}
-        <p className="text-center mt-6">
-          <Link to="/" className="text-sm text-gray-500 hover:text-primary transition-colors">
-            &larr; Back to home
-          </Link>
-        </p>
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Spinner } from '../ui'
 import type { PreviousOutreach } from '../../api'
+import type { EmailType } from '../../types/api'
 
 export interface EmailDraft {
   to: string
@@ -18,6 +19,7 @@ export interface EmailContact {
 export interface JobContext {
   role: string
   company: string
+  companyDomain: string
   jobUrl: string
   requirements?: string
 }
@@ -30,7 +32,7 @@ interface EmailDraftModalProps {
   previousOutreaches?: PreviousOutreach[]
   onClose: () => void
   onDraftChange: (draft: EmailDraft) => void
-  onRegenerate: () => void
+  onRegenerate: (emailType: EmailType) => void
   onOpenInGmail: (draft: EmailDraft) => void
 }
 
@@ -197,26 +199,40 @@ export function EmailDraftModal({
 
           {/* Footer actions */}
           {!isRegenerating && draft && (
-            <div className="p-4 pb-8 sm:p-3 sm:pb-3 border-t border-gray-100 bg-gray-50/50 space-y-3 sm:space-y-2 shrink-0">
-              <button
-                onClick={handleOpenInGmail}
-                className="w-full py-3 sm:py-2 px-4 sm:px-3 bg-[#EA4335] text-white font-medium text-sm rounded-lg sm:rounded hover:bg-[#D93025] transition-colors flex items-center justify-center gap-2 shadow-sm"
-              >
-                <svg className="w-5 h-5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
-                </svg>
-                Open in Gmail
-              </button>
+            <div className="p-4 pb-8 sm:p-3 sm:pb-3 border-t border-gray-100 bg-gray-50/50 shrink-0">
+              <div className="flex justify-between items-center">
+                {/* AI Generate segmented button */}
+                <div className="flex rounded-lg sm:rounded border border-gray-200 overflow-hidden">
+                  <button
+                    onClick={() => onRegenerate('intro')}
+                    className="py-3 sm:py-2 px-3 sm:px-2.5 bg-white text-gray-700 font-medium text-sm hover:bg-gray-100 transition-colors flex items-center gap-1.5 border-r border-gray-200"
+                  >
+                    <svg className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <path d="M12 3L14.5 8.5L21 9.5L16.5 14L17.5 21L12 18L6.5 21L7.5 14L3 9.5L9.5 8.5L12 3Z" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Quick Intro
+                  </button>
+                  <button
+                    onClick={() => onRegenerate('cover-letter')}
+                    className="py-3 sm:py-2 px-3 sm:px-2.5 bg-white text-gray-700 font-medium text-sm hover:bg-gray-100 transition-colors flex items-center gap-1.5"
+                  >
+                    <svg className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <path d="M12 3L14.5 8.5L21 9.5L16.5 14L17.5 21L12 18L6.5 21L7.5 14L3 9.5L9.5 8.5L12 3Z" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Cover Letter
+                  </button>
+                </div>
 
-              <button
-                onClick={onRegenerate}
-                className="w-full py-3 sm:py-2 px-4 sm:px-3 bg-white text-gray-700 font-medium text-sm rounded-lg sm:rounded hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 border border-gray-200"
-              >
-                <svg className="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Regenerate Draft
-              </button>
+                <button
+                  onClick={handleOpenInGmail}
+                  className="p-3 sm:p-2 bg-blue-600 text-white rounded-lg sm:rounded hover:bg-blue-700 transition-colors flex items-center justify-center shadow-sm"
+                  title="Open in Gmail"
+                >
+                  <svg className="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                  </svg>
+                </button>
+              </div>
             </div>
           )}
         </div>

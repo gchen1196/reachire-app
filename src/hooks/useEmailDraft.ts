@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useGenerateEmail } from './useGenerateEmail'
 import { createDefaultEmailDraft } from '../lib/email-template'
 import type { EmailDraft, EmailContact, JobContext } from '../components/email'
+import type { EmailType } from '../types/api'
 
 interface UseEmailDraftParams {
   contact: EmailContact | null
@@ -15,7 +16,7 @@ interface UseEmailDraftReturn {
   editedDraft: EmailDraft | null
   setEditedDraft: (draft: EmailDraft) => void
   isRegenerating: boolean
-  regenerate: () => void
+  regenerate: (emailType: EmailType) => void
   reset: () => void
 }
 
@@ -66,17 +67,21 @@ export function useEmailDraft({ contact, job, isOpen }: UseEmailDraftParams): Us
     wasOpen.current = isOpen
   }, [isOpen, contact, job])
 
-  const regenerate = useCallback(() => {
+  const regenerate = useCallback((emailType: EmailType) => {
     if (!contact || !job) return
 
     emailMutationRef.current.mutate(
       {
         jobTitle: job.role,
         companyName: job.company,
+        companyDomain: job.companyDomain,
         companyDescription: job.requirements,
         jobUrl: job.jobUrl,
         contactName: contact.name,
-        contactFirstName: contact.name.split(' ')[0]
+        contactFirstName: contact.name.split(' ')[0],
+        contactEmail: contact.email,
+        contactTitle: contact.title,
+        emailType,
       },
       {
         onSuccess: (data) => {

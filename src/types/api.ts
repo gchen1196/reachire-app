@@ -107,15 +107,25 @@ export type SearchJobResponse =
   | SearchJobUnsupportedSiteResponse
 
 // Email generation types
+export type EmailType = 'intro' | 'cover-letter'
+
 export interface GenerateEmailRequest {
+  // Job details
   jobTitle: string
   companyName: string
+  companyDomain: string
   companyDescription?: string
+  department?: string
   jobUrl: string
+  // Contact details
   contactName: string
   contactFirstName?: string
+  contactEmail: string
+  contactTitle?: string
+  contactLinkedinUrl?: string
+  // Options
+  emailType: EmailType
   tone?: 'professional' | 'casual'
-  askForReferral?: boolean
 }
 
 export interface GenerateEmailResponse {

@@ -22,9 +22,11 @@ function apiToTrackerEntry(job: TrackerJob): TrackerEntry {
   return {
     id: job.id,
     company: job.company.name || job.company.domain,
+    companyDomain: job.company.domain,
     companyUrl: `https://${job.company.domain}`,
     role: job.title || 'Unknown Role',
     jobUrl: job.url,
+    requirements: job.requirementsSummary || undefined,
     contacts: job.contacts.map((contact) => ({
       id: contact.id,
       name: contact.name || 'Unknown',
@@ -60,7 +62,9 @@ export function Dashboard() {
   const jobContext = selectedEntry ? {
     role: selectedEntry.role,
     company: selectedEntry.company,
+    companyDomain: selectedEntry.companyDomain,
     jobUrl: selectedEntry.jobUrl,
+    requirements: selectedEntry.requirements,
   } : null
 
   const {

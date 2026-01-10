@@ -14,9 +14,11 @@ export interface ContactEntry {
 export interface TrackerEntry {
   id: string
   company: string
+  companyDomain: string
   companyUrl: string
   role: string
   jobUrl: string
+  requirements?: string
   contacts: ContactEntry[]
 }
 

@@ -45,6 +45,7 @@ export interface TrackerJob {
   url: string
   title: string | null
   department: string | null
+  requirementsSummary: string | null
   company: TrackerCompany
   contacts: TrackerContact[]
 }

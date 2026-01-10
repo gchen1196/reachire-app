@@ -13,7 +13,7 @@ import {
   type JobInfo,
   type Contact
 } from '../components/search'
-import { EmailDraftModal, type EmailDraft, type EmailContact } from '../components/email'
+import { EmailDraftModal, type EmailDraft, type EmailContact, type JobContext } from '../components/email'
 import { useSearchJob } from '../hooks/useSearchJob'
 import { useEmailDraft } from '../hooks/useEmailDraft'
 import { useSearchStore } from '../stores/searchStore'
@@ -71,9 +71,10 @@ export function Search() {
   const searchMutation = useSearchJob()
 
   // Email draft hook - manages draft state and LLM regeneration
-  const jobContext = jobInfo ? {
+  const jobContext: JobContext | null = jobInfo ? {
     role: jobInfo.role,
     company: jobInfo.company,
+    companyDomain: jobInfo.domain,
     jobUrl: jobInfo.jobUrl,
     requirements: jobInfo.requirements
   } : null
