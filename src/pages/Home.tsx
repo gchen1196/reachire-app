@@ -74,7 +74,7 @@ export function Home() {
             </div>
             <h3 className="font-semibold text-primary mb-2">Paste a job link</h3>
             <p className="text-sm text-gray-600">
-              Drop in any job posting link from Glassdoor, Indeed, or company career sites
+              Drop in any job posting link from Indeed, ZipRecruiter, or company career sites
             </p>
           </div>
           {/* Step 2 - Find */}

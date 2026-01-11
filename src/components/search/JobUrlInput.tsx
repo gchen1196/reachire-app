@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { isValidUrl } from '../../lib/url'
 
-const UNSUPPORTED_SITES = ['LinkedIn', 'Wellfound', 'ZipRecruiter', 'Lever', 'Google']
+const UNSUPPORTED_SITES = ['LinkedIn', 'Wellfound', 'Glassdoor', 'Google']
 
 interface JobUrlInputProps {
   onSubmit: (url: string) => void
