@@ -60,10 +60,10 @@ export function Home() {
 
       {/* How it works */}
       <section className="max-w-4xl mx-auto w-full">
-        <h2 className="text-2xl font-semibold text-primary text-center mb-10">How it works</h2>
-        <div className="stagger-children grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <h2 data-aos="fade-up" className="text-2xl font-semibold text-primary text-center mb-10">How it works</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {/* Step 1 - Paste */}
-          <div className="card bg-primary-50 p-6 text-center shadow-xl border border-gray-100/50">
+          <div data-aos="fade-up" data-aos-delay="100" className="card bg-primary-50 p-6 text-center shadow-xl border border-gray-100/50">
             <div className="relative w-14 h-14 mx-auto mb-4">
               <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center shadow-md">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +78,7 @@ export function Home() {
             </p>
           </div>
           {/* Step 2 - Find */}
-          <div className="card bg-accent-50 p-6 text-center shadow-xl border border-gray-100/50">
+          <div data-aos="fade-up" data-aos-delay="200" className="card bg-accent-50 p-6 text-center shadow-xl border border-gray-100/50">
             <div className="relative w-14 h-14 mx-auto mb-4">
               <div className="w-14 h-14 bg-accent rounded-full flex items-center justify-center shadow-md">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,7 +93,7 @@ export function Home() {
             </p>
           </div>
           {/* Step 3 - Reach out */}
-          <div className="card bg-green-50 p-6 text-center shadow-xl border border-gray-100/50">
+          <div data-aos="fade-up" data-aos-delay="300" className="card bg-green-50 p-6 text-center shadow-xl border border-gray-100/50">
             <div className="relative w-14 h-14 mx-auto mb-4">
               <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-md">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,7 +111,7 @@ export function Home() {
       </section>
 
       {/* Value props */}
-      <section className="max-w-2xl mx-auto w-full animate-fade-in-up">
+      <section data-aos="fade-up" className="max-w-2xl mx-auto w-full">
         <div className="card-static p-6 sm:p-8 border-l-4 border-accent">
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
@@ -143,7 +143,7 @@ export function Home() {
       </section>
 
       {/* CTA */}
-      <section className="text-center animate-fade-in">
+      <section data-aos="fade-up" className="text-center">
         <Link
           to="/signin"
           className="btn btn-primary btn-pill px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl"
