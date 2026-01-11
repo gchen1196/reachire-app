@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { toast } from 'sonner'
+import { ClipboardList } from 'lucide-react'
 import { isMobile, openMailto } from '../lib/device'
 import {
   TrackerEntryCard,
@@ -13,6 +14,7 @@ import {
 import { EmailDraftModal, type EmailDraft, type EmailContact } from '../components/email'
 import { useOutreaches } from '../hooks/useOutreaches'
 import { useEmailDraft } from '../hooks/useEmailDraft'
+import { useResume } from '../hooks/useResume'
 import { updateOutreachStatus, deleteOutreaches, getPreviousOutreaches, type TrackerJob, type PreviousOutreach } from '../api'
 import { useQueryClient } from '@tanstack/react-query'
 import { PageLoading, ConfirmModal } from '../components/ui'
@@ -56,6 +58,7 @@ export function Dashboard() {
   const [previousOutreaches, setPreviousOutreaches] = useState<PreviousOutreach[]>([])
 
   const { data, isLoading, error } = useOutreaches()
+  const { hasResume } = useResume()
   const queryClient = useQueryClient()
 
   // Email draft hook - manages draft state and LLM regeneration
@@ -308,9 +311,7 @@ export function Dashboard() {
 
       {filteredEntries.length === 0 ? (
         <div className="card-static p-8 text-center animate-fade-in">
-          <svg className="w-12 h-12 text-accent mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
+          <ClipboardList className="w-12 h-12 text-accent mx-auto mb-4" />
           <p className="text-gray-600">
             {activeFilter === 'all'
               ? 'No contacts tracked yet.'
@@ -353,6 +354,7 @@ export function Dashboard() {
           draft={editedDraft}
           isOpen={isEmailModalOpen}
           isRegenerating={isRegenerating}
+          hasResume={hasResume}
           previousOutreaches={previousOutreaches}
           onClose={handleCloseEmailModal}
           onDraftChange={setEditedDraft}

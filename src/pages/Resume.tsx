@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
+import { ChevronLeft, FileText, Trash2, X, Upload, Info } from 'lucide-react'
 import { Spinner, ConfirmModal } from '../components/ui'
 import { getResume, uploadResume, uploadResumeText, deleteResume } from '../api/resume'
+import { useInvalidateResume } from '../hooks/useResume'
 
 const ACCEPTED_FILE_TYPES = '.pdf,.docx,.doc,.txt'
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
@@ -11,6 +13,7 @@ type InputMode = 'upload' | 'paste'
 
 export function Resume() {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const invalidateResume = useInvalidateResume()
 
   const [isLoading, setIsLoading] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
@@ -77,6 +80,7 @@ export function Resume() {
       setResumeFilename(response.resumeFilename)
       setResumeUrl(response.resumeUrl)
       setStagedFile(null)
+      invalidateResume()
       toast.success('Resume uploaded successfully')
     } catch (error) {
       console.error('Failed to upload resume:', error)
@@ -97,6 +101,7 @@ export function Resume() {
       await deleteResume()
       setResumeFilename(null)
       setResumeUrl(null)
+      invalidateResume()
       toast.success('Resume deleted')
     } catch (error) {
       console.error('Failed to delete resume:', error)
@@ -127,6 +132,7 @@ export function Resume() {
       setResumeFilename(response.resumeFilename || 'Pasted resume')
       setResumeUrl(response.resumeUrl)
       setPastedText('')
+      invalidateResume()
       toast.success('Resume saved successfully')
     } catch (error) {
       console.error('Failed to save resume:', error)
@@ -144,9 +150,7 @@ export function Resume() {
           to="/account"
           className="p-2 -ml-2 text-gray-400 hover:text-primary transition-colors"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft className="w-5 h-5" />
         </Link>
         <h1 className="text-xl font-bold text-primary">Resume</h1>
       </div>
@@ -170,9 +174,7 @@ export function Resume() {
         ) : resumeFilename ? (
           <div className="flex items-center gap-3 p-4 bg-primary-50 rounded-lg">
             <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center shrink-0">
-              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+              <FileText className="w-5 h-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium text-primary truncate">{resumeFilename}</p>
@@ -196,9 +198,7 @@ export function Resume() {
               {isDeleting ? (
                 <Spinner className="w-5 h-5" />
               ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
+                <Trash2 className="w-5 h-5" />
               )}
             </button>
           </div>
@@ -239,9 +239,7 @@ export function Resume() {
                     className="w-full flex items-center gap-3 p-4 bg-primary-50 rounded-lg border border-primary-100 hover:bg-primary-100 transition-colors text-left disabled:opacity-50"
                   >
                     <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center shrink-0">
-                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
+                      <FileText className="w-5 h-5 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-primary truncate">{stagedFile.name}</p>
@@ -256,9 +254,7 @@ export function Resume() {
                       className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                       title="Remove file"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
+                      <X className="w-5 h-5" />
                     </span>
                   </button>
                   <button
@@ -285,9 +281,7 @@ export function Resume() {
                 >
                   <div className="flex flex-col items-center gap-3">
                     <div className="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center">
-                      <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                      </svg>
+                      <Upload className="w-6 h-6 text-accent" />
                     </div>
                     <div className="text-center">
                       <p className="font-medium text-primary">Drop your file here or click to browse</p>
@@ -332,9 +326,7 @@ export function Resume() {
       {/* Info note */}
       <div className="bg-accent-50 rounded-lg p-4">
         <div className="flex gap-3">
-          <svg className="w-5 h-5 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          <Info className="w-5 h-5 text-accent shrink-0 mt-0.5" />
           <div className="text-sm text-primary">
             <p className="font-medium">Why upload your resume?</p>
             <p className="mt-1">

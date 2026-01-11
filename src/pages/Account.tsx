@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FileText, CreditCard, Coins, ChevronRight, LogOut } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useUser } from '../hooks/useUser'
 import { PLANS } from '../types/plans'
@@ -75,18 +76,14 @@ export function Account() {
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+              <FileText className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="font-medium text-primary">Resume</p>
               <p className="text-sm text-gray-500">Upload or update your resume</p>
             </div>
           </div>
-          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
         </Link>
 
         {/* Subscription Section */}
@@ -96,18 +93,14 @@ export function Account() {
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
+              <CreditCard className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="font-medium text-primary">Subscription & Billing</p>
               <p className="text-sm text-gray-500">Manage your plan and payment</p>
             </div>
           </div>
-          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
         </Link>
 
         {/* Credits Section */}
@@ -117,18 +110,14 @@ export function Account() {
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <Coins className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="font-medium text-primary">Credits</p>
               <p className="text-sm text-gray-500">View usage and buy more</p>
             </div>
           </div>
-          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
         </Link>
       </div>
 
@@ -139,9 +128,7 @@ export function Account() {
           className="w-full card-static p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
         >
           <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
+            <LogOut className="w-5 h-5 text-gray-500" />
           </div>
           <span className="font-medium text-gray-700">Sign Out</span>
         </button>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { StatusSelectModal } from './StatusSelectModal'
 import { STATUS_CONFIG, type OutreachStatus } from './types'
 
@@ -18,9 +19,7 @@ export function StatusButton({ value, onChange }: StatusButtonProps) {
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${config.color} ${config.bgColor} hover:opacity-80`}
       >
         {config.label}
-        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown className="w-3.5 h-3.5" />
       </button>
 
       <StatusSelectModal

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useUser } from '../hooks/useUser'
 import { PLANS, CREDIT_PACKS } from '../components/billing'
 import { createCheckoutSession } from '../api'
@@ -69,9 +70,7 @@ export function Subscription() {
           to="/account"
           className="p-2 -ml-2 text-gray-400 hover:text-primary transition-colors"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft className="w-5 h-5" />
         </Link>
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -88,9 +87,7 @@ export function Subscription() {
           to="/account"
           className="p-2 -ml-2 text-gray-400 hover:text-primary transition-colors"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft className="w-5 h-5" />
         </Link>
         <h1 className="text-xl font-bold text-primary">Subscription & Billing</h1>
       </div>
@@ -204,9 +201,7 @@ export function Subscription() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-primary">${pack.price}</span>
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  <ChevronRight className="w-5 h-5 text-gray-400" />
                 </div>
               </button>
             ))}

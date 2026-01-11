@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Spinner } from '../ui'
+import { Mail, X, AlertTriangle, Sparkles, Send } from 'lucide-react'
+import { Spinner, ResumeRequiredModal, shouldShowResumePrompt } from '../ui'
 import type { PreviousOutreach } from '../../api'
 import type { EmailType } from '../../types/api'
 
@@ -29,6 +30,7 @@ interface EmailDraftModalProps {
   draft: EmailDraft | null
   isOpen: boolean
   isRegenerating: boolean
+  hasResume?: boolean
   previousOutreaches?: PreviousOutreach[]
   onClose: () => void
   onDraftChange: (draft: EmailDraft) => void
@@ -41,6 +43,7 @@ export function EmailDraftModal({
   draft,
   isOpen,
   isRegenerating,
+  hasResume = true,
   previousOutreaches,
   onClose,
   onDraftChange,
@@ -49,6 +52,8 @@ export function EmailDraftModal({
 }: EmailDraftModalProps) {
   // Animation state - triggers after mount for slide-up effect
   const [isAnimating, setIsAnimating] = useState(false)
+  const [showResumeModal, setShowResumeModal] = useState(false)
+  const [pendingEmailType, setPendingEmailType] = useState<EmailType | null>(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -67,6 +72,24 @@ export function EmailDraftModal({
   const handleOpenInGmail = () => {
     if (draft) {
       onOpenInGmail(draft)
+    }
+  }
+
+  const handleRegenerateClick = (emailType: EmailType) => {
+    // If user has no resume and hasn't dismissed the prompt, show the modal
+    if (!hasResume && shouldShowResumePrompt()) {
+      setPendingEmailType(emailType)
+      setShowResumeModal(true)
+      return
+    }
+    onRegenerate(emailType)
+  }
+
+  const handleContinueWithoutResume = () => {
+    setShowResumeModal(false)
+    if (pendingEmailType) {
+      onRegenerate(pendingEmailType)
+      setPendingEmailType(null)
     }
   }
 
@@ -96,9 +119,7 @@ export function EmailDraftModal({
           <div className="flex items-center justify-between p-4 sm:p-3 border-b border-gray-100 bg-gray-50/50 shrink-0">
             <div className="flex items-center gap-3 sm:gap-2 min-w-0">
               <div className="w-11 h-11 sm:w-9 sm:h-9 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 sm:w-4 sm:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
+                <Mail className="w-5 h-5 sm:w-4 sm:h-4 text-blue-600" />
               </div>
               <div className="min-w-0">
                 <h3 className="font-semibold text-gray-900 truncate sm:text-sm">Email to {contact.name}</h3>
@@ -113,9 +134,7 @@ export function EmailDraftModal({
                 className="p-2 sm:p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                 title="Close"
               >
-                <svg className="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X className="w-5 h-5 sm:w-4 sm:h-4" />
               </button>
             </div>
           </div>
@@ -126,9 +145,7 @@ export function EmailDraftModal({
             {previousOutreaches && previousOutreaches.length > 0 && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 sm:p-2">
                 <div className="flex gap-2">
-                  <svg className="w-5 h-5 sm:w-4 sm:h-4 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
+                  <AlertTriangle className="w-5 h-5 sm:w-4 sm:h-4 text-amber-600 shrink-0 mt-0.5" />
                   <div className="text-sm sm:text-xs">
                     <p className="font-medium text-amber-800">Previously contacted</p>
                     <p className="text-amber-700 mt-1">
@@ -202,41 +219,42 @@ export function EmailDraftModal({
             <div className="p-4 pb-8 sm:p-3 sm:pb-3 border-t border-gray-100 bg-gray-50/50 shrink-0">
               <div className="flex justify-between items-center">
                 {/* AI Generate segmented button */}
-                <div className="flex rounded-lg sm:rounded border border-gray-200 overflow-hidden">
+                <div className="flex rounded-lg sm:rounded border border-purple-200 overflow-hidden">
                   <button
-                    onClick={() => onRegenerate('intro')}
-                    className="py-3 sm:py-2 px-3 sm:px-2.5 bg-white text-gray-700 font-medium text-sm hover:bg-gray-100 transition-colors flex items-center gap-1.5 border-r border-gray-200"
+                    onClick={() => handleRegenerateClick('intro')}
+                    className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5 border-r border-purple-200"
                   >
-                    <svg className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                      <path d="M12 3L14.5 8.5L21 9.5L16.5 14L17.5 21L12 18L6.5 21L7.5 14L3 9.5L9.5 8.5L12 3Z" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                     Quick Intro
                   </button>
                   <button
-                    onClick={() => onRegenerate('cover-letter')}
-                    className="py-3 sm:py-2 px-3 sm:px-2.5 bg-white text-gray-700 font-medium text-sm hover:bg-gray-100 transition-colors flex items-center gap-1.5"
+                    onClick={() => handleRegenerateClick('cover-letter')}
+                    className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5"
                   >
-                    <svg className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                      <path d="M12 3L14.5 8.5L21 9.5L16.5 14L17.5 21L12 18L6.5 21L7.5 14L3 9.5L9.5 8.5L12 3Z" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                     Cover Letter
                   </button>
                 </div>
 
                 <button
                   onClick={handleOpenInGmail}
-                  className="p-3 sm:p-2 bg-blue-600 text-white rounded-lg sm:rounded hover:bg-blue-700 transition-colors flex items-center justify-center shadow-sm"
+                  className="btn-accent-glow p-3 sm:p-2 rounded-lg sm:rounded flex items-center justify-center"
                   title="Open in Gmail"
                 >
-                  <svg className="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                  </svg>
+                  <Send className="w-5 h-5 sm:w-4 sm:h-4" />
                 </button>
               </div>
             </div>
           )}
         </div>
       </div>
+
+      {/* Resume required modal */}
+      <ResumeRequiredModal
+        isOpen={showResumeModal}
+        onClose={() => setShowResumeModal(false)}
+        onContinueAnyway={handleContinueWithoutResume}
+      />
     </div>
   )
 }

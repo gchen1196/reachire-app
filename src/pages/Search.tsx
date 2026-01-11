@@ -16,6 +16,7 @@ import {
 import { EmailDraftModal, type EmailDraft, type EmailContact, type JobContext } from '../components/email'
 import { useSearchJob } from '../hooks/useSearchJob'
 import { useEmailDraft } from '../hooks/useEmailDraft'
+import { useResume } from '../hooks/useResume'
 import { useSearchStore } from '../stores/searchStore'
 import { getOutreachStatuses, getPreviousOutreaches, createOutreach, type PreviousOutreach } from '../api'
 import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
@@ -69,6 +70,7 @@ export function Search() {
 
   const queryClient = useQueryClient()
   const searchMutation = useSearchJob()
+  const { hasResume } = useResume()
 
   // Email draft hook - manages draft state and LLM regeneration
   const jobContext: JobContext | null = jobInfo ? {
@@ -395,6 +397,7 @@ export function Search() {
           draft={editedDraft}
           isOpen={isEmailModalOpen}
           isRegenerating={isRegenerating}
+          hasResume={hasResume}
           previousOutreaches={previousOutreaches}
           onClose={handleCloseEmailModal}
           onDraftChange={setEditedDraft}
