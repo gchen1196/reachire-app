@@ -207,6 +207,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ========================================
+   INPUT STYLES
+   ======================================== */
+.input-url {
+  @apply w-full px-5 py-4 text-base bg-white border border-gray-200 rounded-full shadow-sm transition-all;
+}
+
+.input-url:hover {
+  @apply border-gray-300;
+}
+
+.input-url:focus {
+  @apply outline-none border-cyan;
+}
+
+/* ========================================
    INTERACTIVE ELEMENTS
    ======================================== */
 

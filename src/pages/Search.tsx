@@ -20,6 +20,7 @@ import { useResume } from '../hooks/useResume'
 import { useSearchStore } from '../stores/searchStore'
 import { getOutreachStatuses, getPreviousOutreaches, createOutreach, type PreviousOutreach } from '../api'
 import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
+import { getHomeJobUrl, clearHomeJobUrl } from '../lib/storage'
 
 // Helper to convert API types to frontend types
 function apiJobToJobInfo(job: ApiJob): JobInfo {
@@ -67,6 +68,16 @@ export function Search() {
   const [selectedContact, setSelectedContact] = useState<EmailContact | null>(null)
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
   const [previousOutreaches, setPreviousOutreaches] = useState<PreviousOutreach[]>([])
+
+  // URL from home page - read synchronously to initialize before first render
+  const [homeUrl] = useState(() => {
+    const storedUrl = getHomeJobUrl()
+    if (storedUrl) {
+      clearHomeJobUrl()
+      return storedUrl
+    }
+    return ''
+  })
 
   const queryClient = useQueryClient()
   const searchMutation = useSearchJob()
@@ -310,7 +321,7 @@ export function Search() {
   if (searchState === 'initial') {
     return (
       <div className="flex flex-col gap-8 max-w-2xl mx-auto">
-        <JobUrlInput onSubmit={handleUrlSubmit} />
+        <JobUrlInput onSubmit={handleUrlSubmit} initialUrl={homeUrl} />
       </div>
     )
   }

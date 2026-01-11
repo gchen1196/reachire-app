@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
+import { isValidUrl } from '../../lib/url'
 
 const UNSUPPORTED_SITES = ['LinkedIn', 'Wellfound', 'ZipRecruiter', 'Lever', 'Google']
 
@@ -6,17 +8,28 @@ interface JobUrlInputProps {
   onSubmit: (url: string) => void
   isLoading?: boolean
   compact?: boolean
+  initialUrl?: string
 }
 
-export function JobUrlInput({ onSubmit, isLoading = false, compact = false }: JobUrlInputProps) {
-  const [url, setUrl] = useState('')
+export function JobUrlInput({ onSubmit, isLoading = false, compact = false, initialUrl = '' }: JobUrlInputProps) {
+  const [url, setUrl] = useState(initialUrl)
   const [showTooltip, setShowTooltip] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (url.trim()) {
-      onSubmit(url.trim())
+    const trimmedUrl = url.trim()
+
+    if (!trimmedUrl) {
+      toast.error('Please enter a job URL')
+      return
     }
+
+    if (!isValidUrl(trimmedUrl)) {
+      toast.error('Please enter a valid URL')
+      return
+    }
+
+    onSubmit(trimmedUrl)
   }
 
   if (compact) {
@@ -24,7 +37,7 @@ export function JobUrlInput({ onSubmit, isLoading = false, compact = false }: Jo
       <form onSubmit={handleSubmit} className="w-full">
         <div className="card-static p-3 flex gap-2">
           <input
-            type="url"
+            type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://company.com/job-posting"
@@ -77,11 +90,11 @@ export function JobUrlInput({ onSubmit, isLoading = false, compact = false }: Jo
           <div className="flex flex-col gap-4">
             {/* Enhanced search input */}
             <input
-              type="url"
+              type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://company.com/job-posting"
-              className="w-full px-5 py-4 text-base bg-white border border-gray-200 rounded-full focus:outline-none focus:border-cyan transition-all shadow-sm hover:border-gray-300"
+              className="input-url"
               disabled={isLoading}
             />
             <button
