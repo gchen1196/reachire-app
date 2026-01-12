@@ -112,7 +112,7 @@ export function Pricing() {
       {/* What's included */}
       <div className="card-static">
         <div className="p-4 border-b border-gray-100">
-          <h2 className="font-semibold text-primary">What's included in each credit?</h2>
+          <h2 className="font-semibold text-primary">What's included in each plan?</h2>
         </div>
         <div className="p-4">
           <ul className="space-y-3 text-sm text-gray-600">
@@ -120,7 +120,7 @@ export function Pricing() {
               <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span>1 job search with up to 12 verified contact emails</span>
+              <span>1 credit = 1 job search to find up to 10 verified emails</span>
             </li>
             <li className="flex items-start gap-3">
               <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

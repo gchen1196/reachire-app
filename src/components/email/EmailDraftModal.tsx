@@ -33,6 +33,8 @@ interface EmailDraftModalProps {
   isRegenerating: boolean
   hasResume?: boolean
   canGenerateAI?: boolean
+  aiEmailsRemaining?: number
+  aiEmailLimit?: number
   previousOutreaches?: PreviousOutreach[]
   onClose: () => void
   onDraftChange: (draft: EmailDraft) => void
@@ -47,6 +49,8 @@ export function EmailDraftModal({
   isRegenerating,
   hasResume = true,
   canGenerateAI = true,
+  aiEmailsRemaining,
+  aiEmailLimit,
   previousOutreaches,
   onClose,
   onDraftChange,
@@ -223,23 +227,51 @@ export function EmailDraftModal({
               <div className="flex justify-between items-center">
                 {/* AI Generate segmented button */}
                 {canGenerateAI ? (
-                  <div className="flex rounded-lg sm:rounded border border-purple-200 overflow-hidden">
-                    <button
-                      onClick={() => handleRegenerateClick('intro')}
-                      className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5 border-r border-purple-200"
-                    >
-                      <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
-                      Quick Intro
-                    </button>
-                    <button
-                      onClick={() => handleRegenerateClick('cover-letter')}
-                      className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5"
-                    >
-                      <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
-                      Cover Letter
-                    </button>
-                  </div>
+                  aiEmailsRemaining !== undefined && aiEmailsRemaining <= 0 ? (
+                    // Subscriber but daily limit reached
+                    <div className="flex flex-col gap-1">
+                      <div className="flex rounded-lg sm:rounded border border-amber-200 overflow-hidden">
+                        <div className="py-3 sm:py-2 px-3 sm:px-2.5 bg-amber-50 text-amber-600 font-medium text-sm flex items-center gap-1.5 border-r border-amber-200 cursor-not-allowed">
+                          <Lock className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                          Quick Intro
+                        </div>
+                        <div className="py-3 sm:py-2 px-3 sm:px-2.5 bg-amber-50 text-amber-600 font-medium text-sm flex items-center gap-1.5 cursor-not-allowed">
+                          <Lock className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                          Cover Letter
+                        </div>
+                      </div>
+                      <span className="text-xs text-amber-600">
+                        Daily limit reached ({aiEmailLimit}/day). Resets at midnight UTC.
+                      </span>
+                    </div>
+                  ) : (
+                    // Can generate - show buttons with remaining count
+                    <div className="flex flex-col gap-1">
+                      <div className="flex rounded-lg sm:rounded border border-purple-200 overflow-hidden">
+                        <button
+                          onClick={() => handleRegenerateClick('intro')}
+                          className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5 border-r border-purple-200"
+                        >
+                          <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                          Quick Intro
+                        </button>
+                        <button
+                          onClick={() => handleRegenerateClick('cover-letter')}
+                          className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5"
+                        >
+                          <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                          Cover Letter
+                        </button>
+                      </div>
+                      {aiEmailsRemaining !== undefined && aiEmailLimit !== undefined && (
+                        <span className="text-xs text-gray-500">
+                          {aiEmailsRemaining}/{aiEmailLimit} AI emails remaining today
+                        </span>
+                      )}
+                    </div>
+                  )
                 ) : (
+                  // Not subscribed - show upgrade prompt
                   <div className="flex flex-col gap-1">
                     <div className="flex rounded-lg sm:rounded border border-gray-200 overflow-hidden">
                       <div className="py-3 sm:py-2 px-3 sm:px-2.5 bg-gray-50 text-gray-400 font-medium text-sm flex items-center gap-1.5 border-r border-gray-200 cursor-not-allowed">

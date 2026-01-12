@@ -87,7 +87,7 @@ export function Search() {
   const searchMutation = useSearchJob()
   const confirmDomainMutation = useConfirmDomain()
   const { hasResume } = useResume()
-  const { isSubscribed } = useUser()
+  const { isSubscribed, aiEmailsRemaining, aiEmailLimit } = useUser()
 
   // Email draft hook - manages draft state and LLM regeneration
   const jobContext: JobContext | null = jobInfo ? {
@@ -433,6 +433,8 @@ export function Search() {
           isRegenerating={isRegenerating}
           hasResume={hasResume}
           canGenerateAI={isSubscribed}
+          aiEmailsRemaining={aiEmailsRemaining}
+          aiEmailLimit={aiEmailLimit}
           previousOutreaches={previousOutreaches}
           onClose={handleCloseEmailModal}
           onDraftChange={setEditedDraft}

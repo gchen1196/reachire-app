@@ -60,7 +60,7 @@ export function Dashboard() {
 
   const { data, isLoading, error } = useOutreaches()
   const { hasResume } = useResume()
-  const { isSubscribed } = useUser()
+  const { isSubscribed, aiEmailsRemaining, aiEmailLimit } = useUser()
   const queryClient = useQueryClient()
 
   // Email draft hook - manages draft state and LLM regeneration
@@ -358,6 +358,8 @@ export function Dashboard() {
           isRegenerating={isRegenerating}
           hasResume={hasResume}
           canGenerateAI={isSubscribed}
+          aiEmailsRemaining={aiEmailsRemaining}
+          aiEmailLimit={aiEmailLimit}
           previousOutreaches={previousOutreaches}
           onClose={handleCloseEmailModal}
           onDraftChange={setEditedDraft}

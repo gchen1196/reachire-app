@@ -80,6 +80,9 @@ export function PlanSelector({ onSelectPlan, isProcessing = false, currentPlan }
               <p className={`text-sm font-semibold mt-2 ${getCreditsStyle(plan.id, plan.popular)}`}>
                 {plan.tokens} credits/month
               </p>
+              <p className={`text-sm font-medium mt-1 ${getCreditsStyle(plan.id, plan.popular)}`}>
+                {plan.dailyAiEmails} AI emails/day
+              </p>
               <p className="text-sm text-gray-500 mt-2">{plan.description}</p>
             </div>
             <button

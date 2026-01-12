@@ -16,6 +16,7 @@ export interface PlanConfig {
   name: string
   price: number
   tokens: number
+  dailyAiEmails: number
   description: string
   popular: boolean
 }
@@ -29,6 +30,7 @@ export const PLANS: PlanConfig[] = [
     name: 'Starter',
     price: 15,
     tokens: 25,
+    dailyAiEmails: 15,
     description: 'Great for occasional job searching',
     popular: false,
   },
@@ -37,6 +39,7 @@ export const PLANS: PlanConfig[] = [
     name: 'Pro',
     price: 35,
     tokens: 75,
+    dailyAiEmails: 30,
     description: 'Best for active job seekers',
     popular: true,
   },
@@ -45,10 +48,22 @@ export const PLANS: PlanConfig[] = [
     name: 'Power',
     price: 59,
     tokens: 150,
+    dailyAiEmails: 50,
     description: 'For high-volume outreach',
     popular: false,
   },
 ]
+
+/**
+ * Daily AI email limits by plan (includes non-subscribable plans)
+ */
+export const DAILY_AI_EMAIL_LIMITS: Record<Plan, number> = {
+  free: 0,
+  expired: 0,
+  starter: 15,
+  pro: 30,
+  power: 50,
+}
 
 /**
  * Get plan config by ID

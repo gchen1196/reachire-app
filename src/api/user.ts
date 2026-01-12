@@ -20,6 +20,8 @@ export interface UserResponse {
   tokensResetAt: string | null
   bonusTokens: number
   cancelAt: string | null
+  aiEmailsToday: number
+  aiEmailsResetAt: string | null
 }
 
 export async function upsertUser(dto: UpsertUserDto): Promise<UserResponse> {

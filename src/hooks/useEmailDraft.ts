@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { toast } from 'sonner'
 import { useAuth } from '../contexts/AuthContext'
 import { useGenerateEmail } from './useGenerateEmail'
+import { useInvalidateUser } from './useUser'
 import { createDefaultEmailDraft } from '../lib/email-template'
 import type { EmailDraft, EmailContact, JobContext } from '../components/email'
 import type { EmailType } from '../types/api'
@@ -23,10 +24,15 @@ interface UseEmailDraftReturn {
 export function useEmailDraft({ contact, job, isOpen }: UseEmailDraftParams): UseEmailDraftReturn {
   const { user } = useAuth()
   const emailMutation = useGenerateEmail()
+  const invalidateUser = useInvalidateUser()
 
   // Store mutation in ref to avoid dependency issues
   const emailMutationRef = useRef(emailMutation)
   emailMutationRef.current = emailMutation
+
+  // Store invalidateUser in ref to avoid dependency issues
+  const invalidateUserRef = useRef(invalidateUser)
+  invalidateUserRef.current = invalidateUser
 
   // LLM-generated draft (null until regenerate is clicked)
   const [llmDraft, setLlmDraft] = useState<EmailDraft | null>(null)
@@ -90,6 +96,8 @@ export function useEmailDraft({ contact, job, isOpen }: UseEmailDraftParams): Us
             subject: data.subject,
             body: data.body
           })
+          // Refresh user data to update AI email usage count
+          invalidateUserRef.current()
           toast.success('Email draft generated')
         },
         onError: (error) => {
