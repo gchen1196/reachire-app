@@ -16,7 +16,7 @@ import { useOutreaches } from '../hooks/useOutreaches'
 import { useEmailDraft } from '../hooks/useEmailDraft'
 import { useResume } from '../hooks/useResume'
 import { useUser } from '../hooks/useUser'
-import { updateOutreachStatus, deleteOutreaches, getPreviousOutreaches, type TrackerJob, type PreviousOutreach } from '../api'
+import { updateOutreachStatus, deleteOutreaches, getPreviousOutreaches, getApiErrorMessage, type TrackerJob, type PreviousOutreach } from '../api'
 import { useQueryClient } from '@tanstack/react-query'
 import { PageLoading, ConfirmModal } from '../components/ui'
 
@@ -87,7 +87,7 @@ export function Dashboard() {
   // Show error toast when fetch fails
   useEffect(() => {
     if (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to load contacts')
+      toast.error(getApiErrorMessage(error))
     }
   }, [error])
 

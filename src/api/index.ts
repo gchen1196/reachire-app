@@ -1,4 +1,4 @@
-export { apiClient } from './client'
+export { apiClient, getApiErrorMessage } from './client'
 export { generateEmail } from './email'
 export { searchJob, confirmDomain } from './jobs'
 export {

@@ -20,7 +20,7 @@ import { useEmailDraft } from '../hooks/useEmailDraft'
 import { useResume } from '../hooks/useResume'
 import { useSearchStore } from '../stores/searchStore'
 import { useUser } from '../hooks/useUser'
-import { getOutreachStatuses, getPreviousOutreaches, createOutreach, type PreviousOutreach } from '../api'
+import { getOutreachStatuses, getPreviousOutreaches, createOutreach, getApiErrorMessage, type PreviousOutreach } from '../api'
 import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
 import { getHomeJobUrl, clearHomeJobUrl } from '../lib/storage'
 
@@ -178,7 +178,7 @@ export function Search() {
       {
         onSuccess: handleSearchResponse,
         onError: (error) => {
-          const message = error instanceof Error ? error.message : 'An unexpected error occurred'
+          const message = getApiErrorMessage(error)
           setSearchError(message)
           setSearchState('error')
           toast.error(message)
@@ -210,7 +210,7 @@ export function Search() {
       {
         onSuccess: handleSearchResponse,
         onError: (error) => {
-          const message = error instanceof Error ? error.message : 'An unexpected error occurred'
+          const message = getApiErrorMessage(error)
           setSearchError(message)
           setSearchState('error')
           toast.error(message)

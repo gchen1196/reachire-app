@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useGenerateEmail } from './useGenerateEmail'
 import { useInvalidateUser } from './useUser'
 import { createDefaultEmailDraft } from '../lib/email-template'
+import { getApiErrorMessage } from '../api'
 import type { EmailDraft, EmailContact, JobContext } from '../components/email'
 import type { EmailType } from '../types/api'
 
@@ -101,7 +102,7 @@ export function useEmailDraft({ contact, job, isOpen }: UseEmailDraftParams): Us
           toast.success('Email draft generated')
         },
         onError: (error) => {
-          toast.error(error instanceof Error ? error.message : 'Failed to generate email')
+          toast.error(getApiErrorMessage(error))
         }
       }
     )
