@@ -5,7 +5,7 @@ export function SignIn() {
   const { signInWithGoogle } = useAuth()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-accent-50">
+    <div className="h-screen overflow-hidden flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-accent-50">
       <div className="w-full max-w-sm px-4 animate-fade-in">
         {/* Modal-like card */}
         <div className="card-static p-8 shadow-xl">
