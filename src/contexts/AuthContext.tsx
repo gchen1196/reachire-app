@@ -7,6 +7,7 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   isLoading: boolean
+  isSynced: boolean
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
 }
@@ -17,12 +18,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isSynced, setIsSynced] = useState(false)
   const syncedUserIds = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     // Sync user to backend
     const handleUserSync = async (user: User) => {
-      if (syncedUserIds.current.has(user.id)) return
+      if (syncedUserIds.current.has(user.id)) {
+        setIsSynced(true)
+        return
+      }
       syncedUserIds.current.add(user.id)
 
       try {
@@ -30,9 +35,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: user.id,
           name: user.user_metadata?.full_name || user.user_metadata?.name,
         })
+        setIsSynced(true)
       } catch (error) {
         console.error('Failed to sync user:', error)
         syncedUserIds.current.delete(user.id)
+        setIsSynced(false)
       }
     }
 
@@ -73,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, isLoading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, session, isLoading, isSynced, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   )

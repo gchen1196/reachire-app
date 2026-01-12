@@ -6,12 +6,12 @@ import { DAILY_AI_EMAIL_LIMITS, type Plan } from '../types/plans'
 const USER_QUERY_KEY = 'user'
 
 export function useUser() {
-  const { user: authUser } = useAuth()
+  const { user: authUser, isSynced } = useAuth()
 
   const query = useQuery({
     queryKey: [USER_QUERY_KEY, authUser?.id],
     queryFn: () => getUser(authUser!.id),
-    enabled: !!authUser?.id,
+    enabled: !!authUser?.id && isSynced, // Wait for user to be synced to backend
     staleTime: 1000 * 60 * 2, // 2 minutes - user data should be relatively fresh
   })
 
