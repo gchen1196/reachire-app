@@ -223,7 +223,7 @@ export function EmailDraftModal({
 
           {/* Footer actions */}
           {!isRegenerating && draft && (
-            <div className="p-4 pb-8 sm:p-3 sm:pb-3 border-t border-gray-100 bg-gray-50/50 shrink-0">
+            <div className="px-6 py-4 pb-8 sm:p-3 sm:pb-3 border-t border-gray-100 bg-gray-50/50 shrink-0">
               <div className="flex justify-between items-center">
                 {/* AI Generate segmented button */}
                 {canGenerateAI ? (
