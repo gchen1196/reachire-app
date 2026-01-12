@@ -15,6 +15,7 @@ import { EmailDraftModal, type EmailDraft, type EmailContact } from '../componen
 import { useOutreaches } from '../hooks/useOutreaches'
 import { useEmailDraft } from '../hooks/useEmailDraft'
 import { useResume } from '../hooks/useResume'
+import { useUser } from '../hooks/useUser'
 import { updateOutreachStatus, deleteOutreaches, getPreviousOutreaches, type TrackerJob, type PreviousOutreach } from '../api'
 import { useQueryClient } from '@tanstack/react-query'
 import { PageLoading, ConfirmModal } from '../components/ui'
@@ -59,6 +60,7 @@ export function Dashboard() {
 
   const { data, isLoading, error } = useOutreaches()
   const { hasResume } = useResume()
+  const { isSubscribed } = useUser()
   const queryClient = useQueryClient()
 
   // Email draft hook - manages draft state and LLM regeneration
@@ -355,6 +357,7 @@ export function Dashboard() {
           isOpen={isEmailModalOpen}
           isRegenerating={isRegenerating}
           hasResume={hasResume}
+          canGenerateAI={isSubscribed}
           previousOutreaches={previousOutreaches}
           onClose={handleCloseEmailModal}
           onDraftChange={setEditedDraft}

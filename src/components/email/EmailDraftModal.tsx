@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Mail, X, AlertTriangle, Sparkles, Send } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Mail, X, AlertTriangle, Sparkles, Send, Lock } from 'lucide-react'
 import { Spinner, ResumeRequiredModal, shouldShowResumePrompt } from '../ui'
 import type { PreviousOutreach } from '../../api'
 import type { EmailType } from '../../types/api'
@@ -31,6 +32,7 @@ interface EmailDraftModalProps {
   isOpen: boolean
   isRegenerating: boolean
   hasResume?: boolean
+  canGenerateAI?: boolean
   previousOutreaches?: PreviousOutreach[]
   onClose: () => void
   onDraftChange: (draft: EmailDraft) => void
@@ -44,6 +46,7 @@ export function EmailDraftModal({
   isOpen,
   isRegenerating,
   hasResume = true,
+  canGenerateAI = true,
   previousOutreaches,
   onClose,
   onDraftChange,
@@ -219,22 +222,40 @@ export function EmailDraftModal({
             <div className="p-4 pb-8 sm:p-3 sm:pb-3 border-t border-gray-100 bg-gray-50/50 shrink-0">
               <div className="flex justify-between items-center">
                 {/* AI Generate segmented button */}
-                <div className="flex rounded-lg sm:rounded border border-purple-200 overflow-hidden">
-                  <button
-                    onClick={() => handleRegenerateClick('intro')}
-                    className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5 border-r border-purple-200"
-                  >
-                    <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
-                    Quick Intro
-                  </button>
-                  <button
-                    onClick={() => handleRegenerateClick('cover-letter')}
-                    className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5"
-                  >
-                    <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
-                    Cover Letter
-                  </button>
-                </div>
+                {canGenerateAI ? (
+                  <div className="flex rounded-lg sm:rounded border border-purple-200 overflow-hidden">
+                    <button
+                      onClick={() => handleRegenerateClick('intro')}
+                      className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5 border-r border-purple-200"
+                    >
+                      <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                      Quick Intro
+                    </button>
+                    <button
+                      onClick={() => handleRegenerateClick('cover-letter')}
+                      className="py-3 sm:py-2 px-3 sm:px-2.5 bg-purple-50/50 text-purple-700 font-medium text-sm hover:bg-purple-100 transition-colors flex items-center gap-1.5"
+                    >
+                      <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                      Cover Letter
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-1">
+                    <div className="flex rounded-lg sm:rounded border border-gray-200 overflow-hidden">
+                      <div className="py-3 sm:py-2 px-3 sm:px-2.5 bg-gray-50 text-gray-400 font-medium text-sm flex items-center gap-1.5 border-r border-gray-200 cursor-not-allowed">
+                        <Lock className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                        Quick Intro
+                      </div>
+                      <div className="py-3 sm:py-2 px-3 sm:px-2.5 bg-gray-50 text-gray-400 font-medium text-sm flex items-center gap-1.5 cursor-not-allowed">
+                        <Lock className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                        Cover Letter
+                      </div>
+                    </div>
+                    <Link to="/pricing" className="text-xs text-purple-600 hover:text-purple-700">
+                      Upgrade to generate AI emails
+                    </Link>
+                  </div>
+                )}
 
                 <button
                   onClick={handleOpenInGmail}

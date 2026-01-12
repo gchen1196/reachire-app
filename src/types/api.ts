@@ -1,7 +1,17 @@
 // Request types
 export interface SearchJobRequest {
   url: string
-  selectedDomain?: string
+}
+
+export interface ConfirmDomainRequest {
+  url: string
+  selectedDomain: string
+  job: {
+    companyNames: string[]
+    role: string
+    department?: string
+    seniorityLevel?: string
+  }
 }
 
 // Shared types

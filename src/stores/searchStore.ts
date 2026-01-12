@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { JobInfo, Contact } from '../components/search'
-import type { DomainOption } from '../types/api'
+import type { DomainOption, ApiJob } from '../types/api'
 
 type SearchState =
   | 'initial'
@@ -14,6 +14,8 @@ type SearchState =
 interface SearchStore {
   searchState: SearchState
   jobInfo: JobInfo | null
+  /** Raw API job data - needed for confirmDomain endpoint */
+  apiJob: ApiJob | null
   contacts: Contact[]
   currentUrl: string
   availableDomains: DomainOption[]
@@ -21,6 +23,7 @@ interface SearchStore {
 
   setSearchState: (state: SearchState) => void
   setJobInfo: (job: JobInfo | null) => void
+  setApiJob: (job: ApiJob | null) => void
   setContacts: (contacts: Contact[] | ((prev: Contact[]) => Contact[])) => void
   setCurrentUrl: (url: string) => void
   setAvailableDomains: (domains: DomainOption[]) => void
@@ -31,6 +34,7 @@ interface SearchStore {
 export const useSearchStore = create<SearchStore>((set) => ({
   searchState: 'initial',
   jobInfo: null,
+  apiJob: null,
   contacts: [],
   currentUrl: '',
   availableDomains: [],
@@ -38,6 +42,7 @@ export const useSearchStore = create<SearchStore>((set) => ({
 
   setSearchState: (searchState) => set({ searchState }),
   setJobInfo: (jobInfo) => set({ jobInfo }),
+  setApiJob: (apiJob) => set({ apiJob }),
   setContacts: (contacts) =>
     set((state) => ({
       contacts: typeof contacts === 'function' ? contacts(state.contacts) : contacts
@@ -49,6 +54,7 @@ export const useSearchStore = create<SearchStore>((set) => ({
     set({
       searchState: 'initial',
       jobInfo: null,
+      apiJob: null,
       contacts: [],
       currentUrl: '',
       availableDomains: [],

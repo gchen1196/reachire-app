@@ -1,6 +1,6 @@
 export { apiClient } from './client'
 export { generateEmail } from './email'
-export { searchJob } from './jobs'
+export { searchJob, confirmDomain } from './jobs'
 export {
   getResume,
   uploadResume,

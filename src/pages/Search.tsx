@@ -15,9 +15,11 @@ import {
 } from '../components/search'
 import { EmailDraftModal, type EmailDraft, type EmailContact, type JobContext } from '../components/email'
 import { useSearchJob } from '../hooks/useSearchJob'
+import { useConfirmDomain } from '../hooks/useConfirmDomain'
 import { useEmailDraft } from '../hooks/useEmailDraft'
 import { useResume } from '../hooks/useResume'
 import { useSearchStore } from '../stores/searchStore'
+import { useUser } from '../hooks/useUser'
 import { getOutreachStatuses, getPreviousOutreaches, createOutreach, type PreviousOutreach } from '../api'
 import type { ApiJob, ApiContact, SearchJobResponse } from '../types/api'
 import { getHomeJobUrl, clearHomeJobUrl } from '../lib/storage'
@@ -53,6 +55,8 @@ export function Search() {
     setSearchState,
     jobInfo,
     setJobInfo,
+    apiJob,
+    setApiJob,
     contacts,
     setContacts,
     currentUrl,
@@ -81,7 +85,9 @@ export function Search() {
 
   const queryClient = useQueryClient()
   const searchMutation = useSearchJob()
+  const confirmDomainMutation = useConfirmDomain()
   const { hasResume } = useResume()
+  const { isSubscribed } = useUser()
 
   // Email draft hook - manages draft state and LLM regeneration
   const jobContext: JobContext | null = jobInfo ? {
@@ -133,12 +139,14 @@ export function Search() {
 
       case 'domain_selection_required':
         setJobInfo(apiJobToJobInfo(response.job))
+        setApiJob(response.job) // Store for confirmDomain endpoint
         setAvailableDomains(response.domains)
         setSearchState('domain_selection')
         break
 
       case 'domain_not_found':
         setJobInfo(apiJobToJobInfo(response.job))
+        setApiJob(response.job) // Store for confirmDomain endpoint
         setSearchState('domain_not_found')
         break
 
@@ -180,10 +188,25 @@ export function Search() {
   }
 
   const handleDomainSelect = (domain: string) => {
+    if (!apiJob) {
+      toast.error('Job data not found. Please search again.')
+      setSearchState('initial')
+      return
+    }
+
     setSearchState('loading')
 
-    searchMutation.mutate(
-      { url: currentUrl, selectedDomain: domain },
+    confirmDomainMutation.mutate(
+      {
+        url: currentUrl,
+        selectedDomain: domain,
+        job: {
+          companyNames: apiJob.companyNames,
+          role: apiJob.role,
+          department: apiJob.department || undefined,
+          seniorityLevel: apiJob.seniorityLevel || undefined
+        }
+      },
       {
         onSuccess: handleSearchResponse,
         onError: (error) => {
@@ -409,6 +432,7 @@ export function Search() {
           isOpen={isEmailModalOpen}
           isRegenerating={isRegenerating}
           hasResume={hasResume}
+          canGenerateAI={isSubscribed}
           previousOutreaches={previousOutreaches}
           onClose={handleCloseEmailModal}
           onDraftChange={setEditedDraft}
