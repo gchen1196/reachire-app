@@ -1,13 +1,30 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useUser } from '../hooks/useUser'
+import { toast } from 'sonner'
+import { useUser, useInvalidateUser } from '../hooks/useUser'
 import { PLANS, CREDIT_PACKS } from '../components/billing'
 import { createCheckoutSession } from '../api'
 
 export function Subscription() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [isProcessing, setIsProcessing] = useState(false)
+  const invalidateUser = useInvalidateUser()
+  const hasHandledSuccess = useRef(false)
+
+  // Handle success redirect from Stripe
+  useEffect(() => {
+    if (searchParams.get('success') === 'true' && !hasHandledSuccess.current) {
+      hasHandledSuccess.current = true
+      // Clear the query param
+      setSearchParams({}, { replace: true })
+      // Refresh user data to get updated subscription
+      invalidateUser()
+      toast.success('Payment successful!')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const {
     userData,
@@ -193,12 +210,7 @@ export function Subscription() {
                 disabled={isProcessing}
                 className="w-full border border-primary-100 rounded-lg p-4 flex items-center justify-between hover:bg-primary-50 hover:border-primary-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-left"
               >
-                <div>
-                  <p className="font-semibold text-primary">{pack.tokens} Credits</p>
-                  <p className="text-sm text-gray-500">
-                    ${(pack.price / pack.tokens).toFixed(2)}/credit
-                  </p>
-                </div>
+                <p className="font-semibold text-primary">{pack.tokens} Credits</p>
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-primary">${pack.price}</span>
                   <ChevronRight className="w-5 h-5 text-gray-400" />

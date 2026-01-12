@@ -18,11 +18,18 @@ export function Pricing() {
     setIsProcessing(true)
     setError(null)
     try {
-      const { checkoutUrl } = await createCheckoutSession({ planId })
-      window.location.href = checkoutUrl
+      // If already subscribed, redirect to portal for plan changes
+      if (isSubscribed) {
+        const { portalUrl } = await createPortalSession('/pricing')
+        window.location.href = portalUrl
+      } else {
+        // New subscription
+        const { checkoutUrl } = await createCheckoutSession({ planId })
+        window.location.href = checkoutUrl
+      }
     } catch (err) {
-      console.error('Failed to create checkout session:', err)
-      setError('Failed to start checkout. Please try again.')
+      console.error('Failed to process plan selection:', err)
+      setError('Failed to process request. Please try again.')
       setIsProcessing(false)
     }
   }

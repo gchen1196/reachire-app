@@ -84,6 +84,7 @@ export interface CreditPackConfig {
  * Credit packs available for purchase (only for subscribers)
  */
 export const CREDIT_PACKS: CreditPackConfig[] = [
-  { tokens: 50, price: 15 },
-  { tokens: 100, price: 25 },
+  { tokens: 20, price: 12 },
+  { tokens: 50, price: 25 },
+  { tokens: 100, price: 45 },
 ]
